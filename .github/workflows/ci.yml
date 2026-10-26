@@ -1,0 +1,60 @@
+name: ResearchForge checks
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: researchforge
+          POSTGRES_PASSWORD: ci-local-only
+          POSTGRES_DB: researchforge
+        ports: ['127.0.0.1:5432:5432']
+        options: >-
+          --memory=512m --cpus=1
+          --health-cmd="pg_isready -U researchforge -d researchforge"
+          --health-interval=5s --health-timeout=5s --health-retries=10
+      qdrant:
+        image: qdrant/qdrant:v1.17.1
+        ports: ['127.0.0.1:6333:6333']
+        options: --memory=512m --cpus=1
+        env:
+          QDRANT__TELEMETRY_DISABLED: "true"
+    env:
+      RF_DATABASE_URL: postgresql+psycopg://researchforge:ci-local-only@127.0.0.1:5432/researchforge
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install locked dependencies
+        run: |
+          python -m venv backend/.venv
+          backend/.venv/bin/python -m pip install uv==0.13.1
+          backend/.venv/bin/uv sync --project backend --locked
+          npm ci --prefix frontend
+      - name: Static checks, offline tests, production build, Compose validation
+        run: bash scripts/check.sh
+      - name: Real PostgreSQL, migrations and process restart tests
+        run: backend/.venv/bin/python scripts/test_database.py
+      - name: Install browser for CI
+        working-directory: frontend
+        run: npx playwright install --with-deps chromium
+      - name: Browser smoke tests with real backend
+        env:
+          PLAYWRIGHT_CHANNEL: chromium
+        run: backend/.venv/bin/python scripts/test_database.py --browser

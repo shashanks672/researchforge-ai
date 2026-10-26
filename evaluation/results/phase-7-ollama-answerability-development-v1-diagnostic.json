@@ -1,0 +1,85 @@
+{
+  "dataset_id": "phase-7-answerability-v1",
+  "label_status": "provisional; not independently reviewed",
+  "model": "qwen3:8b",
+  "provider": "local_ollama",
+  "thinking_mode": "disabled",
+  "search_calls": 0,
+  "phase_6_held_out_used_for_tuning": false,
+  "development": {
+    "cases": [
+      {
+        "id": "dev-01",
+        "question": "In what month and year did Northwind Tools launch its first workshop?",
+        "expected_status": "SUFFICIENT",
+        "predicted_status": "SUFFICIENT",
+        "error_type": "",
+        "validation_diagnostic": "",
+        "assessment_json": "{\"question_id\": \"Q1\", \"status\": \"SUFFICIENT\", \"supporting_evidence_ids\": [\"S1\"], \"missing_information\": [], \"explanation\": \"The passage directly states that Northwind Tools opened its first workshop in April 2019, which fully answers the question about the month and year of the launch.\", \"fact_assessments\": [{\"fact\": \"Northwind Tools launched its first workshop in April 2019.\", \"entity\": \"Northwind Tools\", \"property\": \"launched first workshop\", \"value\": \"April 2019\", \"unit\": \"month and year\", \"time_period\": \"2019\", \"scope\": \"first workshop\", \"negation\": \"false\", \"status\": \"SUPPORTED\", \"evidence\": [{\"source_id\": \"S1\", \"quote\": \"Northwind Tools opened its first workshop in April 2019 in Cedar Falls.\"}]}]}",
+        "latency_ms": "14967"
+      },
+      {
+        "id": "dev-02",
+        "question": "Which city hosted the opening, and in which year did it happen?",
+        "expected_status": "PARTIAL",
+        "predicted_status": "ERROR",
+        "error_type": "InvalidProviderOutput",
+        "validation_diagnostic": "insufficient decisions require every requested fact to be missing",
+        "assessment_json": "",
+        "latency_ms": "13324"
+      },
+      {
+        "id": "dev-03",
+        "question": "What was the rated battery capacity of the Argo field sensor?",
+        "expected_status": "INSUFFICIENT",
+        "predicted_status": "ERROR",
+        "error_type": "InvalidProviderOutput",
+        "validation_diagnostic": "insufficient decisions require every requested fact to be missing",
+        "assessment_json": "",
+        "latency_ms": "24369"
+      },
+      {
+        "id": "dev-04",
+        "question": "How many delegates attended the 2021 summit?",
+        "expected_status": "CONFLICTING",
+        "predicted_status": "ERROR",
+        "error_type": "InvalidProviderOutput",
+        "validation_diagnostic": "partial decisions require both supported and missing facts",
+        "assessment_json": "",
+        "latency_ms": "39922"
+      }
+    ],
+    "confusion_matrix": {
+      "SUFFICIENT": {
+        "SUFFICIENT": 1,
+        "PARTIAL": 0,
+        "INSUFFICIENT": 0,
+        "CONFLICTING": 0
+      },
+      "PARTIAL": {
+        "SUFFICIENT": 0,
+        "PARTIAL": 0,
+        "INSUFFICIENT": 0,
+        "CONFLICTING": 0
+      },
+      "INSUFFICIENT": {
+        "SUFFICIENT": 0,
+        "PARTIAL": 0,
+        "INSUFFICIENT": 0,
+        "CONFLICTING": 0
+      },
+      "CONFLICTING": {
+        "SUFFICIENT": 0,
+        "PARTIAL": 0,
+        "INSUFFICIENT": 0,
+        "CONFLICTING": 0
+      }
+    },
+    "false_answer_count": 0,
+    "unanswerable_count": 3,
+    "false_answer_rate": 0.0,
+    "answerable_recall": 1.0,
+    "accuracy": 0.25,
+    "median_latency_ms": 19668.0
+  }
+}

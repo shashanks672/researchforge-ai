@@ -1,0 +1,258 @@
+{
+  "dataset_id": "phase-7-answerability-v2",
+  "label_status": "provisional; not independently reviewed",
+  "model": "qwen3:8b",
+  "provider": "local_ollama",
+  "thinking_mode": "disabled",
+  "search_calls": 0,
+  "phase_6_held_out_used_for_tuning": false,
+  "provider_retries": 1,
+  "development": {
+    "cases": [
+      {
+        "id": "cal-01",
+        "question": "In which year and in which district did the Juniper clinic begin service?",
+        "expected_status": "SUFFICIENT",
+        "predicted_status": "SUFFICIENT",
+        "error_type": "",
+        "validation_diagnostic": "",
+        "assessment_json": "{\"question_id\": \"Q1\", \"status\": \"SUFFICIENT\", \"supporting_evidence_ids\": [\"S1\"], \"missing_information\": [], \"explanation\": \"The passage directly states that the Juniper clinic began service in 2021 in the North District, which answers both the year and the district requested in the question.\", \"fact_assessments\": [{\"fact\": \"The Juniper clinic began service in 2021.\", \"entity\": \"Juniper clinic\", \"property\": \"year of beginning service\", \"value\": \"2021\", \"unit\": \"\", \"time_period\": \"2021\", \"scope\": \"global\", \"negation\": \"\", \"status\": \"SUPPORTED\", \"evidence\": [{\"source_id\": \"S1\", \"quote\": \"The Juniper clinic began service in 2021 in the North District.\"}]}, {\"fact\": \"The Juniper clinic began service in the North District.\", \"entity\": \"Juniper clinic\", \"property\": \"district of beginning service\", \"value\": \"North District\", \"unit\": \"\", \"time_period\": \"2021\", \"scope\": \"global\", \"negation\": \"\", \"status\": \"SUPPORTED\", \"evidence\": [{\"source_id\": \"S1\", \"quote\": \"The Juniper clinic began service in 2021 in the North District.\"}]}]}",
+        "latency_ms": "28261",
+        "llm_calls": "1",
+        "input_tokens": "777",
+        "output_tokens": "352",
+        "model_inference_ms": "26621",
+        "model_load_ms": "13"
+      },
+      {
+        "id": "cal-02",
+        "question": "What was the batch number and its inspection month?",
+        "expected_status": "PARTIAL",
+        "predicted_status": "PARTIAL",
+        "error_type": "",
+        "validation_diagnostic": "",
+        "assessment_json": "{\"question_id\": \"Q1\", \"status\": \"PARTIAL\", \"supporting_evidence_ids\": [\"S1\"], \"missing_information\": [\"inspection month\"], \"explanation\": \"The passage provides the batch number (73) but does not state the inspection month, making the requested information partially supported.\", \"fact_assessments\": [{\"fact\": \"batch number\", \"entity\": \"batch\", \"property\": \"number\", \"value\": \"73\", \"unit\": \"\", \"time_period\": \"\", \"scope\": \"inspection\", \"negation\": \"\", \"status\": \"SUPPORTED\", \"evidence\": [{\"source_id\": \"S1\", \"quote\": \"Batch number 73 passed inspection;\"}]}, {\"fact\": \"inspection month\", \"entity\": \"inspection\", \"property\": \"month\", \"value\": \"\", \"unit\": \"\", \"time_period\": \"\", \"scope\": \"batch\", \"negation\": \"\", \"status\": \"MISSING\", \"evidence\": []}]}",
+        "latency_ms": "22036",
+        "llm_calls": "1",
+        "input_tokens": "762",
+        "output_tokens": "259",
+        "model_inference_ms": "20236",
+        "model_load_ms": "4"
+      },
+      {
+        "id": "cal-03",
+        "question": "What was the rated maximum load of the Sable bridge?",
+        "expected_status": "INSUFFICIENT",
+        "predicted_status": "INSUFFICIENT",
+        "error_type": "",
+        "validation_diagnostic": "",
+        "assessment_json": "{\"question_id\": \"Q1\", \"status\": \"INSUFFICIENT\", \"supporting_evidence_ids\": [], \"missing_information\": [\"rated maximum load of the Sable bridge\"], \"explanation\": \"The passage provides information about the length of the Sable bridge and the year it opened to pedestrians, but it does not mention the rated maximum load of the bridge. Therefore, the requested fact is missing from the provided evidence.\", \"fact_assessments\": [{\"fact\": \"rated maximum load of the Sable bridge\", \"entity\": \"Sable bridge\", \"property\": \"rated maximum load\", \"value\": \"\", \"unit\": \"\", \"time_period\": \"\", \"scope\": \"\", \"negation\": \"\", \"status\": \"MISSING\", \"evidence\": []}]}",
+        "latency_ms": "19098",
+        "llm_calls": "1",
+        "input_tokens": "775",
+        "output_tokens": "188",
+        "model_inference_ms": "16030",
+        "model_load_ms": "16"
+      },
+      {
+        "id": "cal-04",
+        "question": "How many seats were available in the 2024 auditorium?",
+        "expected_status": "CONFLICTING",
+        "predicted_status": "ERROR",
+        "error_type": "ResearchFailure",
+        "validation_diagnostic": "decision status does not match fact-level evidence statuses",
+        "assessment_json": "",
+        "latency_ms": "80456",
+        "llm_calls": "2",
+        "input_tokens": "0",
+        "output_tokens": "0",
+        "model_inference_ms": "0",
+        "model_load_ms": "0"
+      }
+    ],
+    "confusion_matrix": {
+      "SUFFICIENT": {
+        "SUFFICIENT": 1,
+        "PARTIAL": 0,
+        "INSUFFICIENT": 0,
+        "CONFLICTING": 0
+      },
+      "PARTIAL": {
+        "SUFFICIENT": 0,
+        "PARTIAL": 1,
+        "INSUFFICIENT": 0,
+        "CONFLICTING": 0
+      },
+      "INSUFFICIENT": {
+        "SUFFICIENT": 0,
+        "PARTIAL": 0,
+        "INSUFFICIENT": 1,
+        "CONFLICTING": 0
+      },
+      "CONFLICTING": {
+        "SUFFICIENT": 0,
+        "PARTIAL": 0,
+        "INSUFFICIENT": 0,
+        "CONFLICTING": 0
+      }
+    },
+    "macro_f1": 0.75,
+    "error_count": 1,
+    "valid_prediction_count": 3,
+    "structured_output_validity_rate": 0.75,
+    "llm_calls": 5,
+    "input_tokens": 2314,
+    "output_tokens": 799,
+    "model_inference_ms": 62887,
+    "model_load_ms": 33,
+    "false_answer_count": 0,
+    "unanswerable_count": 3,
+    "false_answer_rate": 0.0,
+    "correct_abstention_count": 2,
+    "correct_abstention_rate": 0.6666666666666666,
+    "answerable_recall": 1.0,
+    "accuracy": 0.75,
+    "median_latency_ms": 25148.5,
+    "validated_quote_count": 3,
+    "quote_id_and_exact_text_validity": "100% of quotes in accepted outputs; enforced by provider validation"
+  },
+  "final_test": {
+    "cases": [
+      {
+        "id": "final-01",
+        "question": "Which department received the Helix climate prize, and in what year?",
+        "expected_status": "SUFFICIENT",
+        "predicted_status": "SUFFICIENT",
+        "error_type": "",
+        "validation_diagnostic": "",
+        "assessment_json": "{\"question_id\": \"Q1\", \"status\": \"SUFFICIENT\", \"supporting_evidence_ids\": [\"S1\"], \"missing_information\": [], \"explanation\": \"The passage directly states that the Coastal Research Department received the Helix climate prize in 2024.\", \"fact_assessments\": [{\"fact\": \"The department that received the Helix climate prize\", \"entity\": \"Coastal Research Department\", \"property\": \"department\", \"value\": \"Coastal Research Department\", \"unit\": \"\", \"time_period\": \"\", \"scope\": \"Helix climate prize\", \"negation\": \"\", \"status\": \"SUPPORTED\", \"evidence\": [{\"source_id\": \"S1\", \"quote\": \"In 2024, Helix awarded its climate prize to the Coastal Research Department.\"}]}, {\"fact\": \"The year the Helix climate prize was awarded\", \"entity\": \"2024\", \"property\": \"year\", \"value\": \"2024\", \"unit\": \"\", \"time_period\": \"2024\", \"scope\": \"Helix climate prize\", \"negation\": \"\", \"status\": \"SUPPORTED\", \"evidence\": [{\"source_id\": \"S1\", \"quote\": \"In 2024, Helix awarded its climate prize to the Coastal Research Department.\"}]}]}",
+        "latency_ms": "32609",
+        "llm_calls": "1",
+        "input_tokens": "773",
+        "output_tokens": "340",
+        "model_inference_ms": "28995",
+        "model_load_ms": "89"
+      },
+      {
+        "id": "final-02",
+        "question": "Did the Cedar solar pilot include grid storage?",
+        "expected_status": "SUFFICIENT",
+        "predicted_status": "SUFFICIENT",
+        "error_type": "",
+        "validation_diagnostic": "",
+        "assessment_json": "{\"question_id\": \"Q1\", \"status\": \"SUFFICIENT\", \"supporting_evidence_ids\": [\"S1\"], \"missing_information\": [], \"explanation\": \"The passage directly states that the Cedar solar pilot ran without grid storage during 2025, which answers the question of whether it included grid storage.\", \"fact_assessments\": [{\"fact\": \"The Cedar solar pilot included grid storage?\", \"entity\": \"Cedar solar pilot\", \"property\": \"included grid storage\", \"value\": \"no\", \"unit\": \"\", \"time_period\": \"2025\", \"scope\": \"the Cedar solar pilot\", \"negation\": \"yes\", \"status\": \"SUPPORTED\", \"evidence\": [{\"source_id\": \"S1\", \"quote\": \"The Cedar solar pilot ran without grid storage during 2025.\"}]}]}",
+        "latency_ms": "23050",
+        "llm_calls": "1",
+        "input_tokens": "765",
+        "output_tokens": "216",
+        "model_inference_ms": "20033",
+        "model_load_ms": "23"
+      },
+      {
+        "id": "final-03",
+        "question": "What was the reported defect rate, and in which month was batch 17 inspected?",
+        "expected_status": "PARTIAL",
+        "predicted_status": "PARTIAL",
+        "error_type": "",
+        "validation_diagnostic": "",
+        "assessment_json": "{\"question_id\": \"Q1\", \"status\": \"PARTIAL\", \"supporting_evidence_ids\": [\"S1\"], \"missing_information\": [\"reported defect rate\"], \"explanation\": \"The passage states that batch 17 was inspected in May, which answers the second part of the question. However, it does not provide any information about the reported defect rate, making that part of the question unanswered.\", \"fact_assessments\": [{\"fact\": \"inspection_month\", \"entity\": \"batch 17\", \"property\": \"inspection_month\", \"value\": \"May\", \"unit\": \"\", \"time_period\": \"\", \"scope\": \"batch 17\", \"negation\": \"\", \"status\": \"SUPPORTED\", \"evidence\": [{\"source_id\": \"S1\", \"quote\": \"Batch 17 was inspected in May.\"}]}, {\"fact\": \"reported_defect_rate\", \"entity\": \"batch 17\", \"property\": \"reported_defect_rate\", \"value\": \"\", \"unit\": \"\", \"time_period\": \"\", \"scope\": \"batch 17\", \"negation\": \"\", \"status\": \"MISSING\", \"evidence\": []}]}",
+        "latency_ms": "31553",
+        "llm_calls": "1",
+        "input_tokens": "782",
+        "output_tokens": "298",
+        "model_inference_ms": "28003",
+        "model_load_ms": "5"
+      },
+      {
+        "id": "final-04",
+        "question": "What was the Vale laboratory's annual operating cost?",
+        "expected_status": "INSUFFICIENT",
+        "predicted_status": "INSUFFICIENT",
+        "error_type": "",
+        "validation_diagnostic": "",
+        "assessment_json": "{\"question_id\": \"Q1\", \"status\": \"INSUFFICIENT\", \"supporting_evidence_ids\": [], \"missing_information\": [\"annual operating cost of the Vale laboratory\"], \"explanation\": \"The provided passage does not mention the annual operating cost of the Vale laboratory. It only provides information about the laboratory's opening year and building size. Therefore, the requested fact is missing and cannot be supported based on the given evidence.\", \"fact_assessments\": [{\"fact\": \"annual operating cost of the Vale laboratory\", \"entity\": \"Vale laboratory\", \"property\": \"annual operating cost\", \"value\": \"\", \"unit\": \"\", \"time_period\": \"\", \"scope\": \"\", \"negation\": \"\", \"status\": \"MISSING\", \"evidence\": []}]}",
+        "latency_ms": "19202",
+        "llm_calls": "1",
+        "input_tokens": "768",
+        "output_tokens": "187",
+        "model_inference_ms": "16144",
+        "model_load_ms": "19"
+      },
+      {
+        "id": "final-05",
+        "question": "How many samples were included in the Ardent audit?",
+        "expected_status": "CONFLICTING",
+        "predicted_status": "ERROR",
+        "error_type": "ResearchFailure",
+        "validation_diagnostic": "decision status does not match fact-level evidence statuses",
+        "assessment_json": "",
+        "latency_ms": "73205",
+        "llm_calls": "2",
+        "input_tokens": "0",
+        "output_tokens": "0",
+        "model_inference_ms": "0",
+        "model_load_ms": "0"
+      },
+      {
+        "id": "final-06",
+        "question": "What is the exact legal retention period in days for Oriole account data?",
+        "expected_status": "INSUFFICIENT",
+        "predicted_status": "INSUFFICIENT",
+        "error_type": "",
+        "validation_diagnostic": "",
+        "assessment_json": "{\"question_id\": \"Q1\", \"status\": \"INSUFFICIENT\", \"supporting_evidence_ids\": [], \"missing_information\": [\"exact legal retention period in days for Oriole account data\"], \"explanation\": \"The passage does not provide the exact legal retention period in days for Oriole account data. It only mentions that Oriole account data follows the regional records management policy, but no specific duration is stated.\", \"fact_assessments\": [{\"fact\": \"exact legal retention period in days for Oriole account data\", \"entity\": \"Oriole account data\", \"property\": \"exact legal retention period in days\", \"value\": \"\", \"unit\": \"\", \"time_period\": \"\", \"scope\": \"\", \"negation\": \"\", \"status\": \"MISSING\", \"evidence\": []}]}",
+        "latency_ms": "22456",
+        "llm_calls": "1",
+        "input_tokens": "766",
+        "output_tokens": "198",
+        "model_inference_ms": "19212",
+        "model_load_ms": "6"
+      }
+    ],
+    "confusion_matrix": {
+      "SUFFICIENT": {
+        "SUFFICIENT": 2,
+        "PARTIAL": 0,
+        "INSUFFICIENT": 0,
+        "CONFLICTING": 0
+      },
+      "PARTIAL": {
+        "SUFFICIENT": 0,
+        "PARTIAL": 1,
+        "INSUFFICIENT": 0,
+        "CONFLICTING": 0
+      },
+      "INSUFFICIENT": {
+        "SUFFICIENT": 0,
+        "PARTIAL": 0,
+        "INSUFFICIENT": 2,
+        "CONFLICTING": 0
+      },
+      "CONFLICTING": {
+        "SUFFICIENT": 0,
+        "PARTIAL": 0,
+        "INSUFFICIENT": 0,
+        "CONFLICTING": 0
+      }
+    },
+    "macro_f1": 0.75,
+    "error_count": 1,
+    "valid_prediction_count": 5,
+    "structured_output_validity_rate": 0.8333333333333334,
+    "llm_calls": 7,
+    "input_tokens": 3854,
+    "output_tokens": 1239,
+    "model_inference_ms": 112387,
+    "model_load_ms": 142,
+    "false_answer_count": 0,
+    "unanswerable_count": 4,
+    "false_answer_rate": 0.0,
+    "correct_abstention_count": 3,
+    "correct_abstention_rate": 0.75,
+    "answerable_recall": 1.0,
+    "accuracy": 0.8333333333333334,
+    "median_latency_ms": 27301.5,
+    "validated_quote_count": 4,
+    "quote_id_and_exact_text_validity": "100% of quotes in accepted outputs; enforced by provider validation"
+  }
+}

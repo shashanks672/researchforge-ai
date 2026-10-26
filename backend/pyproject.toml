@@ -1,0 +1,56 @@
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "researchforge-api"
+version = "0.1.0"
+description = "ResearchForge AI backend — incremental, evidence-first research tooling"
+requires-python = ">=3.12,<3.14"
+dependencies = [
+  "aiohttp>=3.12,<4",
+  "alembic>=1.15,<2",
+  "fastapi>=0.115,<1",
+  "fastembed>=0.7,<1",
+  "langgraph>=1,<2",
+  "openai>=2,<3",
+  "psycopg[binary]>=3.2,<4",
+  "pydantic-settings>=2.7,<3",
+  "pypdf>=6,<7",
+  "python-docx>=1.2,<2",
+  "qdrant-client>=1.17,<2",
+  "rank-bm25>=0.2,<1",
+  "sqlalchemy[asyncio]>=2.0,<2.1",
+  "uvicorn>=0.34,<1",
+]
+
+[dependency-groups]
+dev = [
+  "httpx2>=2.14.0",
+  "mypy>=1.15,<2",
+  "pytest>=8.3,<10",
+  "pytest-cov>=6,<8",
+  "ruff>=0.11,<1",
+  "uv>=0.13,<0.14",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers -p no:langsmith_plugin"
+markers = ["database: requires an isolated PostgreSQL test database"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+files = ["app", "tests"]
+plugins = ["pydantic.mypy"]

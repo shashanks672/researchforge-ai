@@ -1,0 +1,173 @@
+{
+  "dataset_id": "phase-7-answerability-v1",
+  "label_status": "provisional; not independently reviewed",
+  "model": "qwen3:8b",
+  "provider": "local_ollama",
+  "search_calls": 0,
+  "phase_6_held_out_used_for_tuning": false,
+  "development": {
+    "cases": [
+      {
+        "id": "dev-01",
+        "question": "In what month and year did Northwind Tools launch its first workshop?",
+        "expected_status": "SUFFICIENT",
+        "predicted_status": "SUFFICIENT",
+        "error_type": "",
+        "assessment_json": "{\"question_id\": \"Q1\", \"status\": \"SUFFICIENT\", \"supporting_evidence_ids\": [\"S1\"], \"missing_information\": [], \"explanation\": \"The passage directly states that Northwind Tools opened its first workshop in April 2019, which fully answers the question about the month and year of the launch.\", \"fact_assessments\": [{\"fact\": \"Northwind Tools launched its first workshop in April 2019.\", \"entity\": \"Northwind Tools\", \"property\": \"launched first workshop\", \"value\": \"April 2019\", \"unit\": \"month and year\", \"time_period\": \"2019\", \"scope\": \"first workshop\", \"negation\": \"false\", \"status\": \"SUPPORTED\", \"evidence\": [{\"source_id\": \"S1\", \"quote\": \"Northwind Tools opened its first workshop in April 2019 in Cedar Falls.\"}]}]}",
+        "latency_ms": "19336"
+      },
+      {
+        "id": "dev-02",
+        "question": "Which city hosted the opening, and in which year did it happen?",
+        "expected_status": "PARTIAL",
+        "predicted_status": "ERROR",
+        "error_type": "InvalidProviderOutput",
+        "assessment_json": "",
+        "latency_ms": "15855"
+      },
+      {
+        "id": "dev-03",
+        "question": "What was the rated battery capacity of the Argo field sensor?",
+        "expected_status": "INSUFFICIENT",
+        "predicted_status": "ERROR",
+        "error_type": "InvalidProviderOutput",
+        "assessment_json": "",
+        "latency_ms": "28758"
+      },
+      {
+        "id": "dev-04",
+        "question": "How many delegates attended the 2021 summit?",
+        "expected_status": "CONFLICTING",
+        "predicted_status": "ERROR",
+        "error_type": "InvalidProviderOutput",
+        "assessment_json": "",
+        "latency_ms": "42007"
+      }
+    ],
+    "confusion_matrix": {
+      "SUFFICIENT": {
+        "SUFFICIENT": 1,
+        "PARTIAL": 0,
+        "INSUFFICIENT": 0,
+        "CONFLICTING": 0
+      },
+      "PARTIAL": {
+        "SUFFICIENT": 0,
+        "PARTIAL": 0,
+        "INSUFFICIENT": 0,
+        "CONFLICTING": 0
+      },
+      "INSUFFICIENT": {
+        "SUFFICIENT": 0,
+        "PARTIAL": 0,
+        "INSUFFICIENT": 0,
+        "CONFLICTING": 0
+      },
+      "CONFLICTING": {
+        "SUFFICIENT": 0,
+        "PARTIAL": 0,
+        "INSUFFICIENT": 0,
+        "CONFLICTING": 0
+      }
+    },
+    "false_answer_count": 0,
+    "unanswerable_count": 3,
+    "false_answer_rate": 0.0,
+    "answerable_recall": 1.0,
+    "accuracy": 0.25,
+    "median_latency_ms": 24047.0
+  },
+  "final_test": {
+    "cases": [
+      {
+        "id": "test-01",
+        "question": "How many full-time staff did the Lumen archive report in 2022?",
+        "expected_status": "SUFFICIENT",
+        "predicted_status": "SUFFICIENT",
+        "error_type": "",
+        "assessment_json": "{\"question_id\": \"Q1\", \"status\": \"SUFFICIENT\", \"supporting_evidence_ids\": [\"S1\"], \"missing_information\": [], \"explanation\": \"The passage directly states that the Lumen archive employed 42 full-time staff in 2022, which fully answers the question.\", \"fact_assessments\": [{\"fact\": \"The Lumen archive reported 42 full-time staff in 2022.\", \"entity\": \"Lumen archive\", \"property\": \"full-time staff\", \"value\": \"42\", \"unit\": \"staff\", \"time_period\": \"2022\", \"scope\": \"report\", \"negation\": \"false\", \"status\": \"SUPPORTED\", \"evidence\": [{\"source_id\": \"S1\", \"quote\": \"The Lumen archive employed 42 full-time staff in 2022.\"}]}, {\"fact\": \"The Lumen archive reported 42 full-time staff in 2022.\", \"entity\": \"Lumen archive\", \"property\": \"full-time staff\", \"value\": \"42\", \"unit\": \"staff\", \"time_period\": \"2022\", \"scope\": \"report\", \"negation\": \"false\", \"status\": \"SUPPORTED\", \"evidence\": [{\"source_id\": \"S1\", \"quote\": \"The Lumen archive employed 42 full-time staff in 2022.\"}]}]}",
+        "latency_ms": "32208"
+      },
+      {
+        "id": "test-02",
+        "question": "What percentage reduction did the water program target, and what was its measured baseline use?",
+        "expected_status": "PARTIAL",
+        "predicted_status": "ERROR",
+        "error_type": "InvalidProviderOutput",
+        "assessment_json": "",
+        "latency_ms": "34068"
+      },
+      {
+        "id": "test-03",
+        "question": "What was the acquisition price paid for the Meridian mapping unit?",
+        "expected_status": "INSUFFICIENT",
+        "predicted_status": "ERROR",
+        "error_type": "InvalidProviderOutput",
+        "assessment_json": "",
+        "latency_ms": "38262"
+      },
+      {
+        "id": "test-04",
+        "question": "At what temperature should the Kestrel sample cartridges be stored?",
+        "expected_status": "CONFLICTING",
+        "predicted_status": "ERROR",
+        "error_type": "InvalidProviderOutput",
+        "assessment_json": "",
+        "latency_ms": "40942"
+      },
+      {
+        "id": "test-05",
+        "question": "Did the company use animal testing for its 2023 product line?",
+        "expected_status": "SUFFICIENT",
+        "predicted_status": "SUFFICIENT",
+        "error_type": "",
+        "assessment_json": "{\"question_id\": \"Q1\", \"status\": \"SUFFICIENT\", \"supporting_evidence_ids\": [\"S1\"], \"missing_information\": [], \"explanation\": \"The passage directly states that the company did not use animal testing for the 2023 product line, which fully answers the research question.\", \"fact_assessments\": [{\"fact\": \"The company did not use animal testing for the 2023 product line.\", \"entity\": \"company\", \"property\": \"use of animal testing\", \"value\": \"did not use\", \"unit\": \"product line\", \"time_period\": \"2023\", \"scope\": \"product line\", \"negation\": \"did not use\", \"status\": \"SUPPORTED\", \"evidence\": [{\"source_id\": \"S1\", \"quote\": \"The company did not use animal testing for the 2023 product line.\"}]}, {\"fact\": \"The company did not use animal testing for the 2023 product line.\", \"entity\": \"company\", \"property\": \"use of animal testing\", \"value\": \"did not use\", \"unit\": \"product line\", \"time_period\": \"2023\", \"scope\": \"product line\", \"negation\": \"did not use\", \"status\": \"SUPPORTED\", \"evidence\": [{\"source_id\": \"S1\", \"quote\": \"The company did not use animal testing for the 2023 product line.\"}]}]}",
+        "latency_ms": "35674"
+      },
+      {
+        "id": "test-06",
+        "question": "For exactly how many years are customer records retained?",
+        "expected_status": "INSUFFICIENT",
+        "predicted_status": "ERROR",
+        "error_type": "InvalidProviderOutput",
+        "assessment_json": "",
+        "latency_ms": "27677"
+      }
+    ],
+    "confusion_matrix": {
+      "SUFFICIENT": {
+        "SUFFICIENT": 2,
+        "PARTIAL": 0,
+        "INSUFFICIENT": 0,
+        "CONFLICTING": 0
+      },
+      "PARTIAL": {
+        "SUFFICIENT": 0,
+        "PARTIAL": 0,
+        "INSUFFICIENT": 0,
+        "CONFLICTING": 0
+      },
+      "INSUFFICIENT": {
+        "SUFFICIENT": 0,
+        "PARTIAL": 0,
+        "INSUFFICIENT": 0,
+        "CONFLICTING": 0
+      },
+      "CONFLICTING": {
+        "SUFFICIENT": 0,
+        "PARTIAL": 0,
+        "INSUFFICIENT": 0,
+        "CONFLICTING": 0
+      }
+    },
+    "false_answer_count": 0,
+    "unanswerable_count": 4,
+    "false_answer_rate": 0.0,
+    "answerable_recall": 1.0,
+    "accuracy": 0.3333333333333333,
+    "median_latency_ms": 34871.0
+  },
+  "evaluation_status": "pilot; exposed and retired before method calibration",
+  "thinking_mode": "disabled",
+  "note": "The final_test split in this v1 result must not be reused as a final test after development calibration."
+}

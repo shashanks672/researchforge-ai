@@ -1,0 +1,93 @@
+{
+  "corpus": "6 generated records; one relevant document per query; K=3",
+  "cases": [
+    [
+      "juniper.txt",
+      "The Juniper battery stores 20 kWh of electricity. It operates in Bristol. Inspections are required every 30 days.",
+      "What is the energy storage capacity of Juniper?"
+    ],
+    [
+      "cedar.txt",
+      "The Cedar wind turbine produces 50 kilowatts at rated wind speed. This pilot is in York. It was installed in 2024.",
+      "How much power does the Cedar turbine generate?"
+    ],
+    [
+      "maple.txt",
+      "The Maple solar array has 40 panels with a total peak capacity of 16 kilowatts. Its panels face south.",
+      "How many photovoltaic panels does Maple contain?"
+    ],
+    [
+      "birch.txt",
+      "The Birch water reservoir holds 900 litres. The inspection schedule is once a week. Water is used for irrigation.",
+      "How much water can Birch store?"
+    ],
+    [
+      "willow.txt",
+      "The Willow heat pump has a seasonal coefficient of performance of 3.8. It heats the local library in Bath.",
+      "What is the seasonal efficiency coefficient of Willow?"
+    ],
+    [
+      "oak.txt",
+      "The Oak electric shuttle carries 18 passengers. It runs between the station and campus every 15 minutes.",
+      "What is the passenger capacity of Oak?"
+    ]
+  ],
+  "model": "BAAI/bge-small-en-v1.5",
+  "model_revision": "aa8f8b060edb00e03bfdd08813a2949946c8ba55",
+  "device": "CPUExecutionProvider, 2 threads, batch 8",
+  "metrics": {
+    "semantic": {
+      "recall_at_3": 1.0,
+      "mrr_at_3": 1.0,
+      "ndcg_at_3": 1.0,
+      "mean_latency_ms": 23.336993165382108,
+      "latencies_ms": [
+        23.365250002825633,
+        24.02491699467646,
+        22.719749998941552,
+        23.13549999962561,
+        21.777875001134817,
+        24.99866699508857
+      ]
+    },
+    "bm25": {
+      "recall_at_3": 1.0,
+      "mrr_at_3": 1.0,
+      "ndcg_at_3": 1.0,
+      "mean_latency_ms": 3.989500333166992,
+      "latencies_ms": [
+        4.288541997084394,
+        3.899208997609094,
+        3.341917006764561,
+        3.6059999983990565,
+        4.11833399994066,
+        4.682999999204185
+      ]
+    },
+    "hybrid": {
+      "recall_at_3": 1.0,
+      "mrr_at_3": 1.0,
+      "ndcg_at_3": 1.0,
+      "mean_latency_ms": 20.12623633466622,
+      "latencies_ms": [
+        23.414834002323914,
+        22.201416999450885,
+        19.21783300349489,
+        18.390375000308268,
+        19.86170899908757,
+        17.671250003331807
+      ]
+    }
+  },
+  "indexing_ms": [
+    206.08854200690985,
+    139.97729199763853,
+    140.95024999551242,
+    133.5232499986887,
+    136.62825000210432,
+    177.6109999991604
+  ],
+  "chunks": 6,
+  "uploaded_bytes": 652,
+  "collection_storage": "Docker volume observation includes shared collections"
+}

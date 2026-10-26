@@ -1,0 +1,104 @@
+{
+  "dataset_id": "researchforge-claim-eligibility-v1",
+  "dataset_version": "1.0.0",
+  "run_date": "2026-10-26",
+  "source_revision": "uncommitted working tree; no Git commit required",
+  "provenance": "Synthetic examples; labels are provisional and independently unreviewed.",
+  "cases": [
+    {
+      "text": "Copyright law regulates protected works.",
+      "expected": "VERIFIABLE_CLAIM",
+      "predicted": "VERIFIABLE_CLAIM"
+    },
+    {
+      "text": "Juniper stores 20 kWh.",
+      "expected": "VERIFIABLE_CLAIM",
+      "predicted": "VERIFIABLE_CLAIM"
+    },
+    {
+      "text": "It has",
+      "expected": "INCOMPLETE_FRAGMENT",
+      "predicted": "INCOMPLETE_FRAGMENT"
+    },
+    {
+      "text": "The body of research",
+      "expected": "INCOMPLETE_FRAGMENT",
+      "predicted": "INCOMPLETE_FRAGMENT"
+    },
+    {
+      "text": "However, it provides an overview.",
+      "expected": "INSUFFICIENT_CONTEXT",
+      "predicted": "INSUFFICIENT_CONTEXT"
+    },
+    {
+      "text": "What does copyright law regulate?",
+      "expected": "QUESTION_OR_INSTRUCTION",
+      "predicted": "QUESTION_OR_INSTRUCTION"
+    },
+    {
+      "text": "Please compare the two policies.",
+      "expected": "QUESTION_OR_INSTRUCTION",
+      "predicted": "QUESTION_OR_INSTRUCTION"
+    },
+    {
+      "text": "This is the most fascinating technology.",
+      "expected": "NON_FACTUAL_STATEMENT",
+      "predicted": "NON_FACTUAL_STATEMENT"
+    },
+    {
+      "text": "The device should be redesigned.",
+      "expected": "NON_FACTUAL_STATEMENT",
+      "predicted": "NON_FACTUAL_STATEMENT"
+    },
+    {
+      "text": "The policy took effect on 1 January 2024.",
+      "expected": "VERIFIABLE_CLAIM",
+      "predicted": "VERIFIABLE_CLAIM"
+    },
+    {
+      "text": "The device is not operational.",
+      "expected": "VERIFIABLE_CLAIM",
+      "predicted": "VERIFIABLE_CLAIM"
+    },
+    {
+      "text": "The capacity is 20 kWh. Juniper operates in Bristol.",
+      "expected": "VERIFIABLE_CLAIM",
+      "predicted": "VERIFIABLE_CLAIM"
+    }
+  ],
+  "case_count": 12,
+  "accuracy": 1.0,
+  "macro_f1": 1.0,
+  "per_class": {
+    "INCOMPLETE_FRAGMENT": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "INSUFFICIENT_CONTEXT": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "NON_FACTUAL_STATEMENT": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "QUESTION_OR_INSTRUCTION": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "VERIFIABLE_CLAIM": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    }
+  },
+  "known_limitations": [
+    "Heuristic linguistic checks are conservative and English-only.",
+    "A leading pronoun is held for context; no antecedent reconstruction is performed.",
+    "Results validate these regression examples only, not general language coverage."
+  ]
+}

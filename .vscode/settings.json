@@ -1,0 +1,12 @@
+{
+  "python.defaultInterpreterPath": "${workspaceFolder}/backend/.venv/bin/python",
+  "python.testing.pytestEnabled": true,
+  "python.testing.pytestArgs": ["backend/tests"],
+  "python.envFile": "${workspaceFolder}/.env",
+  "typescript.tsdk": "frontend/node_modules/typescript/lib",
+  "editor.formatOnSave": true,
+  "[python]": { "editor.defaultFormatter": "charliermarsh.ruff" },
+  "[typescript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[typescriptreact]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "files.exclude": { "**/__pycache__": true, "**/.pytest_cache": true }
+}

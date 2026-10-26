@@ -1,0 +1,69 @@
+{
+  "dataset_id": "phase-7-answerability-v2",
+  "label_status": "provisional; not independently reviewed",
+  "note": "Freshly authored after development-only calibration; no Phase 6 or Phase 7 v1 test labels used for calibration.",
+  "development": [
+    {
+      "id": "cal-01",
+      "question": "In which year and in which district did the Juniper clinic begin service?",
+      "expected_status": "SUFFICIENT",
+      "sources": ["The Juniper clinic began service in 2021 in the North District."]
+    },
+    {
+      "id": "cal-02",
+      "question": "What was the batch number and its inspection month?",
+      "expected_status": "PARTIAL",
+      "sources": ["Batch number 73 passed inspection; the report does not state the month."]
+    },
+    {
+      "id": "cal-03",
+      "question": "What was the rated maximum load of the Sable bridge?",
+      "expected_status": "INSUFFICIENT",
+      "sources": ["The Sable bridge is 240 metres long and opened to pedestrians in 2017."]
+    },
+    {
+      "id": "cal-04",
+      "question": "How many seats were available in the 2024 auditorium?",
+      "expected_status": "CONFLICTING",
+      "sources": ["The venue inventory lists 310 seats.", "The 2024 event guide lists 280 seats in the auditorium."]
+    }
+  ],
+  "final_test": [
+    {
+      "id": "final-01",
+      "question": "Which department received the Helix climate prize, and in what year?",
+      "expected_status": "SUFFICIENT",
+      "sources": ["In 2024, Helix awarded its climate prize to the Coastal Research Department."]
+    },
+    {
+      "id": "final-02",
+      "question": "Did the Cedar solar pilot include grid storage?",
+      "expected_status": "SUFFICIENT",
+      "sources": ["The Cedar solar pilot ran without grid storage during 2025."]
+    },
+    {
+      "id": "final-03",
+      "question": "What was the reported defect rate, and in which month was batch 17 inspected?",
+      "expected_status": "PARTIAL",
+      "sources": ["Batch 17 was inspected in May. The report does not state a defect rate."]
+    },
+    {
+      "id": "final-04",
+      "question": "What was the Vale laboratory's annual operating cost?",
+      "expected_status": "INSUFFICIENT",
+      "sources": ["The Vale laboratory opened in 2018 and occupies a 300 square metre building."]
+    },
+    {
+      "id": "final-05",
+      "question": "How many samples were included in the Ardent audit?",
+      "expected_status": "CONFLICTING",
+      "sources": ["The audit table lists 18 samples.", "The audit summary lists 21 samples."]
+    },
+    {
+      "id": "final-06",
+      "question": "What is the exact legal retention period in days for Oriole account data?",
+      "expected_status": "INSUFFICIENT",
+      "sources": ["Oriole account data follows the regional records management policy."]
+    }
+  ]
+}

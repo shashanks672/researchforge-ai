@@ -1,0 +1,69 @@
+{
+  "dataset_id": "phase-7-answerability-v1",
+  "label_status": "provisional; not independently reviewed",
+  "note": "New data authored for Phase 7. Phase 6 held-out labels were not used to tune the prompt or method.",
+  "development": [
+    {
+      "id": "dev-01",
+      "question": "In what month and year did Northwind Tools launch its first workshop?",
+      "expected_status": "SUFFICIENT",
+      "sources": ["Northwind Tools opened its first workshop in April 2019 in Cedar Falls."]
+    },
+    {
+      "id": "dev-02",
+      "question": "Which city hosted the opening, and in which year did it happen?",
+      "expected_status": "PARTIAL",
+      "sources": ["The opening took place in Cedar Falls."]
+    },
+    {
+      "id": "dev-03",
+      "question": "What was the rated battery capacity of the Argo field sensor?",
+      "expected_status": "INSUFFICIENT",
+      "sources": ["The Argo field sensor can operate for up to 18 hours between charges."]
+    },
+    {
+      "id": "dev-04",
+      "question": "How many delegates attended the 2021 summit?",
+      "expected_status": "CONFLICTING",
+      "sources": ["The summit report states that 84 delegates attended.", "The event summary lists 92 delegates in attendance."]
+    }
+  ],
+  "final_test": [
+    {
+      "id": "test-01",
+      "question": "How many full-time staff did the Lumen archive report in 2022?",
+      "expected_status": "SUFFICIENT",
+      "sources": ["The Lumen archive employed 42 full-time staff in 2022."]
+    },
+    {
+      "id": "test-02",
+      "question": "What percentage reduction did the water program target, and what was its measured baseline use?",
+      "expected_status": "PARTIAL",
+      "sources": ["The program aims to reduce water use by 20 percent by 2030."]
+    },
+    {
+      "id": "test-03",
+      "question": "What was the acquisition price paid for the Meridian mapping unit?",
+      "expected_status": "INSUFFICIENT",
+      "sources": ["Meridian acquired the mapping unit in 2020 and added it to its navigation division."]
+    },
+    {
+      "id": "test-04",
+      "question": "At what temperature should the Kestrel sample cartridges be stored?",
+      "expected_status": "CONFLICTING",
+      "sources": ["The handling guide says to store cartridges at 4 degrees Celsius.", "The product sheet says cartridges should be stored at 8 degrees Celsius."]
+    },
+    {
+      "id": "test-05",
+      "question": "Did the company use animal testing for its 2023 product line?",
+      "expected_status": "SUFFICIENT",
+      "sources": ["The company did not use animal testing for the 2023 product line."]
+    },
+    {
+      "id": "test-06",
+      "question": "For exactly how many years are customer records retained?",
+      "expected_status": "INSUFFICIENT",
+      "sources": ["Customer records are stored securely and reviewed under the retention policy."]
+    }
+  ]
+}

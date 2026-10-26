@@ -1,0 +1,74 @@
+{
+  "method": "mock-literal-relations-v1; controlled offline fixtures only",
+  "cases": 12,
+  "predictions": [
+    "SUPPORTED",
+    "CONTRADICTED",
+    "CONTRADICTED",
+    "INSUFFICIENT_EVIDENCE",
+    "NOT_EVALUATED",
+    "INSUFFICIENT_EVIDENCE",
+    "INSUFFICIENT_EVIDENCE",
+    "INSUFFICIENT_EVIDENCE",
+    "INSUFFICIENT_EVIDENCE",
+    "INSUFFICIENT_EVIDENCE",
+    "INSUFFICIENT_EVIDENCE",
+    "INSUFFICIENT_EVIDENCE"
+  ],
+  "expected": [
+    "SUPPORTED",
+    "CONTRADICTED",
+    "CONTRADICTED",
+    "INSUFFICIENT_EVIDENCE",
+    "NOT_EVALUATED",
+    "INSUFFICIENT_EVIDENCE",
+    "INSUFFICIENT_EVIDENCE",
+    "INSUFFICIENT_EVIDENCE",
+    "INSUFFICIENT_EVIDENCE",
+    "INSUFFICIENT_EVIDENCE",
+    "INSUFFICIENT_EVIDENCE",
+    "INSUFFICIENT_EVIDENCE"
+  ],
+  "per_class": {
+    "CONTRADICTED": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "INSUFFICIENT_EVIDENCE": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "NOT_EVALUATED": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "SUPPORTED": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    }
+  },
+  "false_support_rate": 0.0,
+  "citation_support_accuracy": 1.0,
+  "latencies_ms": [
+    1.7224170005647466,
+    1.734833000227809,
+    1.720041000226047,
+    1.7666250005277107,
+    1.7525000002933666,
+    1.7820829998527188,
+    1.786958000593586,
+    1.8517079997764085,
+    1.7773750005289912,
+    1.7893330004881136,
+    1.8527499996707775,
+    1.8280839994986309
+  ],
+  "hosted_calls": 0,
+  "model_downloads": 0,
+  "confidence_scores": null,
+  "limitations": "Policy fixtures, including deliberate paraphrase abstention; not model quality evaluation or calibrated semantic entailment."
+}

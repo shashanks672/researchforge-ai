@@ -1,0 +1,115 @@
+{
+  "dataset_id": "phase-7-answerability-v2",
+  "label_status": "provisional; not independently reviewed",
+  "model": "qwen3:8b",
+  "provider": "local_ollama",
+  "thinking_mode": "disabled",
+  "search_calls": 0,
+  "phase_6_held_out_used_for_tuning": false,
+  "provider_retries": 1,
+  "development": {
+    "cases": [
+      {
+        "id": "cal-01",
+        "question": "In which year and in which district did the Juniper clinic begin service?",
+        "expected_status": "SUFFICIENT",
+        "predicted_status": "SUFFICIENT",
+        "error_type": "",
+        "validation_diagnostic": "",
+        "assessment_json": "{\"question_id\": \"Q1\", \"status\": \"SUFFICIENT\", \"supporting_evidence_ids\": [\"S1\"], \"missing_information\": [], \"explanation\": \"The passage directly states that the Juniper clinic began service in 2021 in the North District, which answers both the year and the district requested in the question.\", \"fact_assessments\": [{\"fact\": \"The Juniper clinic began service in 2021.\", \"entity\": \"Juniper clinic\", \"property\": \"year of beginning service\", \"value\": \"2021\", \"unit\": \"\", \"time_period\": \"2021\", \"scope\": \"global\", \"negation\": \"\", \"status\": \"SUPPORTED\", \"evidence\": [{\"source_id\": \"S1\", \"quote\": \"The Juniper clinic began service in 2021 in the North District.\"}]}, {\"fact\": \"The Juniper clinic began service in the North District.\", \"entity\": \"Juniper clinic\", \"property\": \"district of beginning service\", \"value\": \"North District\", \"unit\": \"\", \"time_period\": \"2021\", \"scope\": \"global\", \"negation\": \"\", \"status\": \"SUPPORTED\", \"evidence\": [{\"source_id\": \"S1\", \"quote\": \"The Juniper clinic began service in 2021 in the North District.\"}]}]}",
+        "latency_ms": "23062",
+        "llm_calls": "1",
+        "input_tokens": "777",
+        "output_tokens": "352",
+        "model_inference_ms": "19546",
+        "model_load_ms": "11"
+      },
+      {
+        "id": "cal-02",
+        "question": "What was the batch number and its inspection month?",
+        "expected_status": "PARTIAL",
+        "predicted_status": "PARTIAL",
+        "error_type": "",
+        "validation_diagnostic": "",
+        "assessment_json": "{\"question_id\": \"Q1\", \"status\": \"PARTIAL\", \"supporting_evidence_ids\": [\"S1\"], \"missing_information\": [\"inspection month\"], \"explanation\": \"The passage provides the batch number (73) but does not state the inspection month, making the requested information partially supported.\", \"fact_assessments\": [{\"fact\": \"batch number\", \"entity\": \"batch\", \"property\": \"number\", \"value\": \"73\", \"unit\": \"\", \"time_period\": \"\", \"scope\": \"inspection\", \"negation\": \"\", \"status\": \"SUPPORTED\", \"evidence\": [{\"source_id\": \"S1\", \"quote\": \"Batch number 73 passed inspection;\"}]}, {\"fact\": \"inspection month\", \"entity\": \"inspection\", \"property\": \"month\", \"value\": \"\", \"unit\": \"\", \"time_period\": \"\", \"scope\": \"batch\", \"negation\": \"\", \"status\": \"MISSING\", \"evidence\": []}]}",
+        "latency_ms": "18843",
+        "llm_calls": "1",
+        "input_tokens": "762",
+        "output_tokens": "259",
+        "model_inference_ms": "16501",
+        "model_load_ms": "3"
+      },
+      {
+        "id": "cal-03",
+        "question": "What was the rated maximum load of the Sable bridge?",
+        "expected_status": "INSUFFICIENT",
+        "predicted_status": "INSUFFICIENT",
+        "error_type": "",
+        "validation_diagnostic": "",
+        "assessment_json": "{\"question_id\": \"Q1\", \"status\": \"INSUFFICIENT\", \"supporting_evidence_ids\": [], \"missing_information\": [\"rated maximum load of the Sable bridge\"], \"explanation\": \"The passage provides information about the length of the Sable bridge and the year it opened to pedestrians, but it does not mention the rated maximum load of the bridge. Therefore, the requested fact is missing from the provided evidence.\", \"fact_assessments\": [{\"fact\": \"rated maximum load of the Sable bridge\", \"entity\": \"Sable bridge\", \"property\": \"rated maximum load\", \"value\": \"\", \"unit\": \"\", \"time_period\": \"\", \"scope\": \"\", \"negation\": \"\", \"status\": \"MISSING\", \"evidence\": []}]}",
+        "latency_ms": "14627",
+        "llm_calls": "1",
+        "input_tokens": "775",
+        "output_tokens": "188",
+        "model_inference_ms": "11738",
+        "model_load_ms": "3"
+      },
+      {
+        "id": "cal-04",
+        "question": "How many seats were available in the 2024 auditorium?",
+        "expected_status": "CONFLICTING",
+        "predicted_status": "ERROR",
+        "error_type": "ResearchFailure",
+        "validation_diagnostic": "decision status does not match fact-level evidence statuses",
+        "assessment_json": "",
+        "latency_ms": "68601",
+        "llm_calls": "2",
+        "input_tokens": "0",
+        "output_tokens": "0",
+        "model_inference_ms": "0",
+        "model_load_ms": "0"
+      }
+    ],
+    "confusion_matrix": {
+      "SUFFICIENT": {
+        "SUFFICIENT": 1,
+        "PARTIAL": 0,
+        "INSUFFICIENT": 0,
+        "CONFLICTING": 0
+      },
+      "PARTIAL": {
+        "SUFFICIENT": 0,
+        "PARTIAL": 1,
+        "INSUFFICIENT": 0,
+        "CONFLICTING": 0
+      },
+      "INSUFFICIENT": {
+        "SUFFICIENT": 0,
+        "PARTIAL": 0,
+        "INSUFFICIENT": 1,
+        "CONFLICTING": 0
+      },
+      "CONFLICTING": {
+        "SUFFICIENT": 0,
+        "PARTIAL": 0,
+        "INSUFFICIENT": 0,
+        "CONFLICTING": 0
+      }
+    },
+    "error_count": 1,
+    "valid_prediction_count": 3,
+    "llm_calls": 5,
+    "input_tokens": 2314,
+    "output_tokens": 799,
+    "model_inference_ms": 47785,
+    "model_load_ms": 17,
+    "false_answer_count": 0,
+    "unanswerable_count": 3,
+    "false_answer_rate": 0.0,
+    "correct_abstention_count": 2,
+    "correct_abstention_rate": 0.6666666666666666,
+    "answerable_recall": 1.0,
+    "accuracy": 0.75,
+    "median_latency_ms": 20952.5
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "dataset_id": "phase-7-answerability-v1",
+  "label_status": "provisional; not independently reviewed",
+  "model": "qwen3:8b",
+  "provider": "local_ollama",
+  "thinking_mode": "disabled",
+  "search_calls": 0,
+  "phase_6_held_out_used_for_tuning": false,
+  "provider_retries": 1,
+  "development": {
+    "cases": [
+      {
+        "id": "dev-01",
+        "question": "In what month and year did Northwind Tools launch its first workshop?",
+        "expected_status": "SUFFICIENT",
+        "predicted_status": "SUFFICIENT",
+        "error_type": "",
+        "validation_diagnostic": "",
+        "assessment_json": "{\"question_id\": \"Q1\", \"status\": \"SUFFICIENT\", \"supporting_evidence_ids\": [\"S1\"], \"missing_information\": [], \"explanation\": \"The passage directly states that Northwind Tools opened its first workshop in April 2019. This answers the question about the month and year of the launch of the first workshop.\", \"fact_assessments\": [{\"fact\": \"Northwind Tools launched its first workshop in April 2019.\", \"entity\": \"Northwind Tools\", \"property\": \"launched its first workshop\", \"value\": \"April 2019\", \"unit\": \"\", \"time_period\": \"April 2019\", \"scope\": \"first workshop\", \"negation\": \"\", \"status\": \"SUPPORTED\", \"evidence\": [{\"source_id\": \"S1\", \"quote\": \"Northwind Tools opened its first workshop in April 2019 in Cedar Falls.\"}]}]}",
+        "latency_ms": "22141"
+      },
+      {
+        "id": "dev-02",
+        "question": "Which city hosted the opening, and in which year did it happen?",
+        "expected_status": "PARTIAL",
+        "predicted_status": "PARTIAL",
+        "error_type": "",
+        "validation_diagnostic": "",
+        "assessment_json": "{\"question_id\": \"Q1\", \"status\": \"PARTIAL\", \"supporting_evidence_ids\": [\"S1\"], \"missing_information\": [\"year\"], \"explanation\": \"The passage provides the city where the opening took place (Cedar Falls) but does not mention the year it happened.\", \"fact_assessments\": [{\"fact\": \"The city that hosted the opening\", \"entity\": \"opening\", \"property\": \"hosted_city\", \"value\": \"Cedar Falls\", \"unit\": \"\", \"time_period\": \"\", \"scope\": \"opening\", \"negation\": \"\", \"status\": \"SUPPORTED\", \"evidence\": [{\"source_id\": \"S1\", \"quote\": \"The opening took place in Cedar Falls.\"}]}, {\"fact\": \"The year the opening happened\", \"entity\": \"opening\", \"property\": \"year\", \"value\": \"\", \"unit\": \"\", \"time_period\": \"\", \"scope\": \"opening\", \"negation\": \"\", \"status\": \"MISSING\", \"evidence\": []}]}",
+        "latency_ms": "22599"
+      },
+      {
+        "id": "dev-03",
+        "question": "What was the rated battery capacity of the Argo field sensor?",
+        "expected_status": "INSUFFICIENT",
+        "predicted_status": "ERROR",
+        "error_type": "ResearchFailure",
+        "validation_diagnostic": "supporting evidence IDs must match the fact-level quotes",
+        "assessment_json": "",
+        "latency_ms": "36726"
+      },
+      {
+        "id": "dev-04",
+        "question": "How many delegates attended the 2021 summit?",
+        "expected_status": "CONFLICTING",
+        "predicted_status": "ERROR",
+        "error_type": "ResearchFailure",
+        "validation_diagnostic": "supporting evidence IDs must match the fact-level quotes",
+        "assessment_json": "",
+        "latency_ms": "78785"
+      }
+    ],
+    "confusion_matrix": {
+      "SUFFICIENT": {
+        "SUFFICIENT": 1,
+        "PARTIAL": 0,
+        "INSUFFICIENT": 0,
+        "CONFLICTING": 0
+      },
+      "PARTIAL": {
+        "SUFFICIENT": 0,
+        "PARTIAL": 1,
+        "INSUFFICIENT": 0,
+        "CONFLICTING": 0
+      },
+      "INSUFFICIENT": {
+        "SUFFICIENT": 0,
+        "PARTIAL": 0,
+        "INSUFFICIENT": 0,
+        "CONFLICTING": 0
+      },
+      "CONFLICTING": {
+        "SUFFICIENT": 0,
+        "PARTIAL": 0,
+        "INSUFFICIENT": 0,
+        "CONFLICTING": 0
+      }
+    },
+    "error_count": 2,
+    "valid_prediction_count": 2,
+    "false_answer_count": 0,
+    "unanswerable_count": 3,
+    "false_answer_rate": 0.0,
+    "correct_abstention_count": 1,
+    "correct_abstention_rate": 0.3333333333333333,
+    "answerable_recall": 1.0,
+    "accuracy": 0.5,
+    "median_latency_ms": 29662.5
+  }
+}

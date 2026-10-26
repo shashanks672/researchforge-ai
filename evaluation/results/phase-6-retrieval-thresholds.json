@@ -1,0 +1,1052 @@
+{
+  "dataset_id": "answerability-v1",
+  "dataset_version": 1,
+  "review_status": "unreviewed",
+  "run_date": "2026-10-19",
+  "source_revision": "uncommitted working tree",
+  "run_config": {
+    "embedding_model": "BAAI/bge-small-en-v1.5",
+    "embedding_provider": "cached BGE small English ONNX CPU",
+    "qdrant": "local disposable test namespace",
+    "python": "3.12.14",
+    "hardware": "Apple M4, 16 GB unified memory",
+    "development_count": 6,
+    "held_out_count": 12
+  },
+  "methodology": {
+    "threshold_selection": "Maximize answerable-class F1 on development queries, then apply once to held-out.",
+    "baseline": "See the lexical overlap baseline in phase-6-answerability.json.",
+    "no_answer_policy": "INSUFFICIENT is unanswerable; PARTIAL and CONFLICTING require qualifications.",
+    "limitations": [
+      "Synthetic unreviewed corpus; six development, twelve held-out questions.",
+      "Top scores and score gaps do not establish coverage or entailment.",
+      "Hybrid RRF values are ranking signals, not probabilities."
+    ]
+  },
+  "results_by_method": {
+    "semantic": {
+      "threshold_selected_on_development_only": 0.71962047,
+      "held_out_answerability_metrics": {
+        "sample_count": 12,
+        "confusion_matrix": {
+          "actual_answerable": {
+            "predicted_answerable": 4,
+            "abstained": 2
+          },
+          "actual_unanswerable": {
+            "predicted_answerable": 4,
+            "abstained": 2
+          }
+        },
+        "accuracy": 0.5,
+        "answerable_precision": 0.5,
+        "answerable_recall": 0.6666666666666666,
+        "macro_f1": 0.48571428571428577,
+        "false_answer_rate": 0.6666666666666666,
+        "false_answer_denominator": 6,
+        "correct_abstention_rate": 0.3333333333333333,
+        "incorrect_abstention_rate": 0.3333333333333333,
+        "per_category": {
+          "direct": {
+            "samples": 1,
+            "correct": 1,
+            "false_answers": 0
+          },
+          "paraphrase": {
+            "samples": 1,
+            "correct": 1,
+            "false_answers": 0
+          },
+          "partial": {
+            "samples": 1,
+            "correct": 0,
+            "false_answers": 0
+          },
+          "unanswerable": {
+            "samples": 1,
+            "correct": 1,
+            "false_answers": 0
+          },
+          "missing_entity": {
+            "samples": 1,
+            "correct": 0,
+            "false_answers": 1
+          },
+          "unsupported_numeric": {
+            "samples": 1,
+            "correct": 0,
+            "false_answers": 1
+          },
+          "multi_passage": {
+            "samples": 1,
+            "correct": 0,
+            "false_answers": 0
+          },
+          "conflicting": {
+            "samples": 1,
+            "correct": 1,
+            "false_answers": 0
+          },
+          "negation": {
+            "samples": 1,
+            "correct": 1,
+            "false_answers": 0
+          },
+          "topical_similarity": {
+            "samples": 1,
+            "correct": 0,
+            "false_answers": 1
+          },
+          "misleading_keyword_overlap": {
+            "samples": 1,
+            "correct": 0,
+            "false_answers": 1
+          },
+          "incomplete_context": {
+            "samples": 1,
+            "correct": 1,
+            "false_answers": 0
+          }
+        }
+      },
+      "held_out_top_score_distributions": {
+        "answerable": {
+          "sample_count": 6,
+          "min": 0.588818,
+          "median": 0.7674399000000001,
+          "max": 0.88488925
+        },
+        "unanswerable": {
+          "sample_count": 6,
+          "min": 0.52439713,
+          "median": 0.755041015,
+          "max": 0.79160655
+        }
+      },
+      "held_out_top_score_gaps": {
+        "HOLD-01": 0.10552454999999994,
+        "HOLD-02": 0.07058435000000007,
+        "HOLD-03": 0.018571359999999926,
+        "HOLD-04": 0.09910505000000003,
+        "HOLD-05": 0.003659129999999955,
+        "HOLD-06": 0.003432850000000043,
+        "HOLD-07": 0.0709245799999999,
+        "HOLD-08": 0.020750500000000005,
+        "HOLD-09": 0.04928779999999999,
+        "HOLD-10": 0.05785735999999997,
+        "HOLD-11": 0.003463129999999981,
+        "HOLD-12": 0.04439084999999998
+      },
+      "raw_top_scores": {
+        "DEV-01": 0.75325024,
+        "DEV-02": 0.71962047,
+        "DEV-03": 0.6801691,
+        "DEV-04": 0.70267546,
+        "DEV-05": 0.69454503,
+        "DEV-06": 0.7785821,
+        "HOLD-01": 0.88488925,
+        "HOLD-02": 0.7900325,
+        "HOLD-03": 0.588818,
+        "HOLD-04": 0.64636755,
+        "HOLD-05": 0.76887023,
+        "HOLD-06": 0.79160655,
+        "HOLD-07": 0.67946243,
+        "HOLD-08": 0.7928214,
+        "HOLD-09": 0.7448473,
+        "HOLD-10": 0.765116,
+        "HOLD-11": 0.74496603,
+        "HOLD-12": 0.52439713
+      },
+      "ranked_passage_ids": {
+        "DEV-01": [
+          "p3",
+          "h8b",
+          "h8a",
+          "h4",
+          "h6",
+          "p4",
+          "h11",
+          "h1",
+          "h5",
+          "h7a"
+        ],
+        "DEV-02": [
+          "p5",
+          "p3",
+          "h4",
+          "h8a",
+          "h8b",
+          "h1",
+          "h7a",
+          "p4",
+          "h11",
+          "h3"
+        ],
+        "DEV-03": [
+          "p3",
+          "p4",
+          "h4",
+          "h7a",
+          "h3",
+          "h8b",
+          "h8a",
+          "h11",
+          "h1",
+          "p5"
+        ],
+        "DEV-04": [
+          "p4",
+          "p3",
+          "h12",
+          "h6",
+          "h5",
+          "h10",
+          "h4",
+          "h7a",
+          "h8b",
+          "h8a"
+        ],
+        "DEV-05": [
+          "p5",
+          "h4",
+          "p3",
+          "h1",
+          "h8a",
+          "h8b",
+          "h11",
+          "h3",
+          "h7a",
+          "h6"
+        ],
+        "DEV-06": [
+          "p6",
+          "h7a",
+          "h10",
+          "h6",
+          "h7b",
+          "h5",
+          "h12",
+          "h3",
+          "p3",
+          "p4"
+        ],
+        "HOLD-01": [
+          "h4",
+          "h1",
+          "h11",
+          "h8a",
+          "p3",
+          "h8b",
+          "h3",
+          "h2",
+          "p4",
+          "p5"
+        ],
+        "HOLD-02": [
+          "h2",
+          "h11",
+          "h12",
+          "h8b",
+          "h8a",
+          "h4",
+          "h6",
+          "h3",
+          "p3",
+          "h5"
+        ],
+        "HOLD-03": [
+          "h3",
+          "p4",
+          "h4",
+          "p5",
+          "h9",
+          "h11",
+          "p3",
+          "h2",
+          "h7b",
+          "h12"
+        ],
+        "HOLD-04": [
+          "h4",
+          "p4",
+          "h1",
+          "h12",
+          "h11",
+          "h7a",
+          "h3",
+          "p5",
+          "p3",
+          "h6"
+        ],
+        "HOLD-05": [
+          "h6",
+          "h5",
+          "h10",
+          "h7a",
+          "h12",
+          "h4",
+          "h8b",
+          "p3",
+          "h8a",
+          "p4"
+        ],
+        "HOLD-06": [
+          "h6",
+          "h5",
+          "h10",
+          "h7a",
+          "p3",
+          "h4",
+          "h8b",
+          "h8a",
+          "h12",
+          "h7b"
+        ],
+        "HOLD-07": [
+          "h7a",
+          "h7b",
+          "h6",
+          "h5",
+          "h12",
+          "h3",
+          "h4",
+          "h8b",
+          "p3",
+          "h8a"
+        ],
+        "HOLD-08": [
+          "h8a",
+          "h8b",
+          "h6",
+          "h5",
+          "h10",
+          "p3",
+          "h7a",
+          "h2",
+          "h11",
+          "p4"
+        ],
+        "HOLD-09": [
+          "h9",
+          "h3",
+          "p5",
+          "h8a",
+          "p6",
+          "h12",
+          "h8b",
+          "h6",
+          "h4",
+          "p3"
+        ],
+        "HOLD-10": [
+          "h10",
+          "h6",
+          "h5",
+          "p4",
+          "h12",
+          "h7a",
+          "h4",
+          "h8b",
+          "h3",
+          "h7b"
+        ],
+        "HOLD-11": [
+          "h11",
+          "h4",
+          "h1",
+          "h2",
+          "h8b",
+          "p3",
+          "h8a",
+          "p4",
+          "p5",
+          "h7a"
+        ],
+        "HOLD-12": [
+          "p4",
+          "h12",
+          "h6",
+          "h4",
+          "h7a",
+          "h8a",
+          "h8b",
+          "p3",
+          "h5",
+          "h10"
+        ]
+      },
+      "score_interpretation": "Ranking signal only, not a calibrated probability or answerability score."
+    },
+    "bm25": {
+      "threshold_selected_on_development_only": 6.456702752784334,
+      "held_out_answerability_metrics": {
+        "sample_count": 12,
+        "confusion_matrix": {
+          "actual_answerable": {
+            "predicted_answerable": 1,
+            "abstained": 5
+          },
+          "actual_unanswerable": {
+            "predicted_answerable": 0,
+            "abstained": 6
+          }
+        },
+        "accuracy": 0.5833333333333334,
+        "answerable_precision": 1.0,
+        "answerable_recall": 0.16666666666666666,
+        "macro_f1": 0.49579831932773105,
+        "false_answer_rate": 0.0,
+        "false_answer_denominator": 6,
+        "correct_abstention_rate": 1.0,
+        "incorrect_abstention_rate": 0.8333333333333334,
+        "per_category": {
+          "direct": {
+            "samples": 1,
+            "correct": 0,
+            "false_answers": 0
+          },
+          "paraphrase": {
+            "samples": 1,
+            "correct": 0,
+            "false_answers": 0
+          },
+          "partial": {
+            "samples": 1,
+            "correct": 0,
+            "false_answers": 0
+          },
+          "unanswerable": {
+            "samples": 1,
+            "correct": 1,
+            "false_answers": 0
+          },
+          "missing_entity": {
+            "samples": 1,
+            "correct": 1,
+            "false_answers": 0
+          },
+          "unsupported_numeric": {
+            "samples": 1,
+            "correct": 1,
+            "false_answers": 0
+          },
+          "multi_passage": {
+            "samples": 1,
+            "correct": 0,
+            "false_answers": 0
+          },
+          "conflicting": {
+            "samples": 1,
+            "correct": 0,
+            "false_answers": 0
+          },
+          "negation": {
+            "samples": 1,
+            "correct": 1,
+            "false_answers": 0
+          },
+          "topical_similarity": {
+            "samples": 1,
+            "correct": 1,
+            "false_answers": 0
+          },
+          "misleading_keyword_overlap": {
+            "samples": 1,
+            "correct": 1,
+            "false_answers": 0
+          },
+          "incomplete_context": {
+            "samples": 1,
+            "correct": 1,
+            "false_answers": 0
+          }
+        }
+      },
+      "held_out_top_score_distributions": {
+        "answerable": {
+          "sample_count": 6,
+          "min": 3.5554027976139597,
+          "median": 5.593992454536799,
+          "max": 6.938725472269495
+        },
+        "unanswerable": {
+          "sample_count": 6,
+          "min": 2.568518658588104,
+          "median": 3.942740896534779,
+          "max": 4.984443551147715
+        }
+      },
+      "held_out_top_score_gaps": {
+        "HOLD-01": 0.9400663123123989,
+        "HOLD-02": 1.0787151499540872,
+        "HOLD-03": 2.1621926014471047,
+        "HOLD-04": 0.3618263781282054,
+        "HOLD-05": 0.2178299361931071,
+        "HOLD-06": 0.36383757282383744,
+        "HOLD-07": 0.3625906535810266,
+        "HOLD-08": 0.0,
+        "HOLD-09": 1.9370126817858164,
+        "HOLD-10": 0.4249755713104535,
+        "HOLD-11": 0.51456825813215,
+        "HOLD-12": 0.0
+      },
+      "raw_top_scores": {
+        "DEV-01": 6.456702752784334,
+        "DEV-02": 2.907297074875766,
+        "DEV-03": 5.752759246794158,
+        "DEV-04": 4.620871848572015,
+        "DEV-05": 2.196610808640225,
+        "DEV-06": 12.76072053254302,
+        "HOLD-01": 5.772310619286895,
+        "HOLD-02": 5.415674289786704,
+        "HOLD-03": 4.730711260035209,
+        "HOLD-04": 2.568518658588104,
+        "HOLD-05": 4.984443551147715,
+        "HOLD-06": 3.567629533522628,
+        "HOLD-07": 3.5554027976139597,
+        "HOLD-08": 5.878036152391975,
+        "HOLD-09": 6.938725472269495,
+        "HOLD-10": 4.167121574238617,
+        "HOLD-11": 3.7183602188309406,
+        "HOLD-12": 4.39322161728045
+      },
+      "ranked_passage_ids": {
+        "DEV-01": [
+          "p3",
+          "h8b",
+          "h8a",
+          "h1",
+          "h12",
+          "p4",
+          "h3",
+          "h9",
+          "h5",
+          "h11"
+        ],
+        "DEV-02": [
+          "p5",
+          "p6",
+          "h3",
+          "h9",
+          "h8b",
+          "h8a"
+        ],
+        "DEV-03": [
+          "p3",
+          "h12",
+          "p4",
+          "h3",
+          "h9",
+          "h11",
+          "h6",
+          "h2",
+          "h5",
+          "h7b"
+        ],
+        "DEV-04": [
+          "h12",
+          "p3",
+          "p4",
+          "h3",
+          "h9",
+          "h11",
+          "h4",
+          "h6",
+          "h2",
+          "h5"
+        ],
+        "DEV-05": [
+          "p6",
+          "h3",
+          "h9",
+          "p5"
+        ],
+        "DEV-06": [
+          "p6",
+          "h7b",
+          "h7a",
+          "h6",
+          "h12",
+          "h2",
+          "h5",
+          "p3",
+          "h3",
+          "h9"
+        ],
+        "HOLD-01": [
+          "h4",
+          "h1",
+          "h11",
+          "p4",
+          "h12",
+          "h3",
+          "h7b",
+          "h9",
+          "h8b",
+          "h8a"
+        ],
+        "HOLD-02": [
+          "h2",
+          "h11",
+          "h12",
+          "h3",
+          "h9",
+          "h6",
+          "h5",
+          "p3",
+          "h7b",
+          "p5"
+        ],
+        "HOLD-03": [
+          "h9",
+          "h3",
+          "p6",
+          "p5",
+          "h12",
+          "h4",
+          "h11"
+        ],
+        "HOLD-04": [
+          "h4",
+          "h11",
+          "h12",
+          "h1",
+          "h3",
+          "h9",
+          "h6",
+          "h2",
+          "h5",
+          "p3"
+        ],
+        "HOLD-05": [
+          "h5",
+          "h6",
+          "h10",
+          "h12",
+          "h3",
+          "h9",
+          "p3",
+          "h8b",
+          "h8a",
+          "h11"
+        ],
+        "HOLD-06": [
+          "h6",
+          "h5",
+          "h10",
+          "p6"
+        ],
+        "HOLD-07": [
+          "h12",
+          "h3",
+          "h7b",
+          "h9",
+          "p6",
+          "h4",
+          "h7a",
+          "h11"
+        ],
+        "HOLD-08": [
+          "h8b",
+          "h8a",
+          "h1",
+          "p5",
+          "h12",
+          "h3",
+          "h9",
+          "h5",
+          "p3",
+          "h11"
+        ],
+        "HOLD-09": [
+          "h9",
+          "h3",
+          "p5",
+          "p6",
+          "h12",
+          "h7b",
+          "h6",
+          "h2",
+          "h5",
+          "p3"
+        ],
+        "HOLD-10": [
+          "h6",
+          "h5",
+          "h10",
+          "p4",
+          "h12",
+          "h3",
+          "h9",
+          "h11",
+          "h4",
+          "h2"
+        ],
+        "HOLD-11": [
+          "h11",
+          "h4",
+          "p4",
+          "h1",
+          "h2"
+        ],
+        "HOLD-12": [
+          "p6"
+        ]
+      },
+      "score_interpretation": "Ranking signal only, not a calibrated probability or answerability score."
+    },
+    "hybrid": {
+      "threshold_selected_on_development_only": 0.03278688524590164,
+      "held_out_answerability_metrics": {
+        "sample_count": 12,
+        "confusion_matrix": {
+          "actual_answerable": {
+            "predicted_answerable": 3,
+            "abstained": 3
+          },
+          "actual_unanswerable": {
+            "predicted_answerable": 3,
+            "abstained": 3
+          }
+        },
+        "accuracy": 0.5,
+        "answerable_precision": 0.5,
+        "answerable_recall": 0.5,
+        "macro_f1": 0.5,
+        "false_answer_rate": 0.5,
+        "false_answer_denominator": 6,
+        "correct_abstention_rate": 0.5,
+        "incorrect_abstention_rate": 0.5,
+        "per_category": {
+          "direct": {
+            "samples": 1,
+            "correct": 1,
+            "false_answers": 0
+          },
+          "paraphrase": {
+            "samples": 1,
+            "correct": 1,
+            "false_answers": 0
+          },
+          "partial": {
+            "samples": 1,
+            "correct": 0,
+            "false_answers": 0
+          },
+          "unanswerable": {
+            "samples": 1,
+            "correct": 0,
+            "false_answers": 1
+          },
+          "missing_entity": {
+            "samples": 1,
+            "correct": 1,
+            "false_answers": 0
+          },
+          "unsupported_numeric": {
+            "samples": 1,
+            "correct": 0,
+            "false_answers": 1
+          },
+          "multi_passage": {
+            "samples": 1,
+            "correct": 0,
+            "false_answers": 0
+          },
+          "conflicting": {
+            "samples": 1,
+            "correct": 0,
+            "false_answers": 0
+          },
+          "negation": {
+            "samples": 1,
+            "correct": 1,
+            "false_answers": 0
+          },
+          "topical_similarity": {
+            "samples": 1,
+            "correct": 1,
+            "false_answers": 0
+          },
+          "misleading_keyword_overlap": {
+            "samples": 1,
+            "correct": 0,
+            "false_answers": 1
+          },
+          "incomplete_context": {
+            "samples": 1,
+            "correct": 1,
+            "false_answers": 0
+          }
+        }
+      },
+      "held_out_top_score_distributions": {
+        "answerable": {
+          "sample_count": 6,
+          "min": 0.03200204813108039,
+          "median": 0.032654680063458494,
+          "max": 0.03278688524590164
+        },
+        "unanswerable": {
+          "sample_count": 6,
+          "min": 0.029551337359792925,
+          "median": 0.032654680063458494,
+          "max": 0.03278688524590164
+        }
+      },
+      "held_out_top_score_gaps": {
+        "HOLD-01": 0.0005288207297726097,
+        "HOLD-02": 0.0005288207297726097,
+        "HOLD-03": 0.0007444168734491302,
+        "HOLD-04": 0.00127323760322174,
+        "HOLD-05": 0.0,
+        "HOLD-06": 0.0005288207297726097,
+        "HOLD-07": 0.00022399012351417835,
+        "HOLD-08": 0.0,
+        "HOLD-09": 0.0005288207297726097,
+        "HOLD-10": 0.00025601638504864355,
+        "HOLD-11": 0.0005288207297726097,
+        "HOLD-12": 0.013157894736842105
+      },
+      "raw_top_scores": {
+        "DEV-01": 0.03278688524590164,
+        "DEV-02": 0.03278688524590164,
+        "DEV-03": 0.03278688524590164,
+        "DEV-04": 0.032266458495966696,
+        "DEV-05": 0.032018442622950824,
+        "DEV-06": 0.03278688524590164,
+        "HOLD-01": 0.03278688524590164,
+        "HOLD-02": 0.03278688524590164,
+        "HOLD-03": 0.03252247488101534,
+        "HOLD-04": 0.03278688524590164,
+        "HOLD-05": 0.03252247488101534,
+        "HOLD-06": 0.03278688524590164,
+        "HOLD-07": 0.03200204813108039,
+        "HOLD-08": 0.03252247488101534,
+        "HOLD-09": 0.03278688524590164,
+        "HOLD-10": 0.03252247488101534,
+        "HOLD-11": 0.03278688524590164,
+        "HOLD-12": 0.029551337359792925
+      },
+      "ranked_passage_ids": {
+        "DEV-01": [
+          "p3",
+          "h8b",
+          "h8a",
+          "h1",
+          "p4",
+          "h6",
+          "h11",
+          "h5",
+          "h4",
+          "h12"
+        ],
+        "DEV-02": [
+          "p5",
+          "h8a",
+          "h8b",
+          "h3",
+          "p6",
+          "h9",
+          "p3",
+          "h4",
+          "h1",
+          "h7a"
+        ],
+        "DEV-03": [
+          "p3",
+          "p4",
+          "h3",
+          "h12",
+          "h11",
+          "h4",
+          "h8b",
+          "h6",
+          "h8a",
+          "p5"
+        ],
+        "DEV-04": [
+          "p4",
+          "h12",
+          "p3",
+          "h6",
+          "h4",
+          "h5",
+          "h3",
+          "h11",
+          "h10",
+          "h9"
+        ],
+        "DEV-05": [
+          "p5",
+          "h3",
+          "p6",
+          "h9",
+          "h4",
+          "p3",
+          "h1",
+          "h8a",
+          "h8b",
+          "h11"
+        ],
+        "DEV-06": [
+          "p6",
+          "h7a",
+          "h7b",
+          "h6",
+          "h12",
+          "h5",
+          "h10",
+          "p3",
+          "h3",
+          "h2"
+        ],
+        "HOLD-01": [
+          "h4",
+          "h1",
+          "h11",
+          "p4",
+          "h3",
+          "h8a",
+          "h8b",
+          "p3",
+          "h12",
+          "h2"
+        ],
+        "HOLD-02": [
+          "h2",
+          "h11",
+          "h12",
+          "h3",
+          "h6",
+          "h8b",
+          "h8a",
+          "h5",
+          "p3",
+          "h4"
+        ],
+        "HOLD-03": [
+          "h3",
+          "h9",
+          "p5",
+          "h4",
+          "h11",
+          "h12",
+          "p6",
+          "p4",
+          "p3",
+          "h2"
+        ],
+        "HOLD-04": [
+          "h4",
+          "h11",
+          "h1",
+          "h12",
+          "h3",
+          "h6",
+          "p3",
+          "p5",
+          "h5",
+          "h2"
+        ],
+        "HOLD-05": [
+          "h5",
+          "h6",
+          "h10",
+          "h12",
+          "h8b",
+          "p3",
+          "h3",
+          "h8a",
+          "h7a",
+          "h4"
+        ],
+        "HOLD-06": [
+          "h6",
+          "h5",
+          "h10",
+          "p6",
+          "h7a",
+          "p3",
+          "h4",
+          "h8b",
+          "h8a",
+          "h12"
+        ],
+        "HOLD-07": [
+          "h7b",
+          "h12",
+          "h7a",
+          "h3",
+          "h4",
+          "h9",
+          "p6",
+          "h11",
+          "h6",
+          "h5"
+        ],
+        "HOLD-08": [
+          "h8b",
+          "h8a",
+          "h5",
+          "p3",
+          "h6",
+          "p5",
+          "h12",
+          "h1",
+          "h7a",
+          "h11"
+        ],
+        "HOLD-09": [
+          "h9",
+          "h3",
+          "p5",
+          "p6",
+          "h12",
+          "h6",
+          "h8a",
+          "h8b",
+          "h7b",
+          "h5"
+        ],
+        "HOLD-10": [
+          "h6",
+          "h10",
+          "h5",
+          "p4",
+          "h12",
+          "h3",
+          "h4",
+          "h11",
+          "h8b",
+          "h7b"
+        ],
+        "HOLD-11": [
+          "h11",
+          "h4",
+          "h1",
+          "h2",
+          "p4",
+          "h8b",
+          "p3",
+          "h8a",
+          "p5",
+          "h7a"
+        ],
+        "HOLD-12": [
+          "p6",
+          "p4",
+          "h12",
+          "h6",
+          "h4",
+          "h7a",
+          "h8a",
+          "h8b",
+          "p3",
+          "h5"
+        ]
+      },
+      "score_interpretation": "Ranking signal only, not a calibrated probability or answerability score."
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "dataset_id": "researchforge-verification-v1",
+  "version": "1.0.0",
+  "provenance": "Synthetic policy regression fixtures, authored for this project. Labels are provisional and not independently human-reviewed.",
+  "annotation_guidelines": "See ../annotations/verification-guidelines.md",
+  "cases": [
+    {
+      "name": "incomplete_has_fragment",
+      "claim": "In addition, it has",
+      "citations": ["S1"],
+      "evidence": ["In addition, it has"],
+      "expected": "NOT_EVALUATED",
+      "eligibility": "INCOMPLETE_FRAGMENT"
+    },
+    {
+      "name": "incomplete_noun_phrase",
+      "claim": "The body of research",
+      "citations": ["S1"],
+      "evidence": ["The body of research"],
+      "expected": "NOT_EVALUATED",
+      "eligibility": "INCOMPLETE_FRAGMENT"
+    },
+    {
+      "name": "pronoun_context_required",
+      "claim": "However, it provides an overview.",
+      "citations": ["S1"],
+      "evidence": ["However, it provides an overview."],
+      "expected": "NOT_EVALUATED",
+      "eligibility": "INSUFFICIENT_CONTEXT"
+    },
+    {
+      "name": "question_not_a_claim",
+      "claim": "What does copyright law regulate?",
+      "citations": ["S1"],
+      "evidence": ["What does copyright law regulate?"],
+      "expected": "NOT_EVALUATED",
+      "eligibility": "QUESTION_OR_INSTRUCTION"
+    },
+    {
+      "name": "multi_passage_compound_claim",
+      "claim": "Juniper stores 20 kWh and operates in Bristol.",
+      "citations": ["S1", "S2"],
+      "evidence": ["Juniper stores 20 kWh.", "Juniper operates in Bristol."],
+      "expected": "INSUFFICIENT_EVIDENCE",
+      "eligibility": "VERIFIABLE_CLAIM"
+    },
+    {
+      "name": "date_sensitive_evidence",
+      "claim": "The Juniper battery stores 20 kWh.",
+      "citations": ["S1"],
+      "evidence": ["The Juniper battery stored 10 kWh in 2020."],
+      "expected": "INSUFFICIENT_EVIDENCE",
+      "eligibility": "VERIFIABLE_CLAIM"
+    }
+  ]
+}

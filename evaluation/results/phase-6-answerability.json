@@ -1,0 +1,291 @@
+{
+  "dataset_id": "answerability-v1",
+  "dataset_version": 1,
+  "provenance": "Locally authored synthetic fixtures for engineering regression; not externally curated or human-reviewed.",
+  "review_status": "unreviewed",
+  "run_type": "synthetic lexical baseline; not an LLM or semantic quality result",
+  "split_counts": {
+    "development": 6,
+    "held_out": 12
+  },
+  "threshold_selection": {
+    "method": "maximize answerable-class F1 on development split; ties choose the lowest threshold",
+    "lexical_overlap_threshold": 0.16666666666666666,
+    "threshold_is_calibrated_probability": false
+  },
+  "metric_denominators": {
+    "false_answer_rate": "false positives / all held-out labels marked INSUFFICIENT",
+    "correct_abstention_rate": "true negatives / all held-out labels marked INSUFFICIENT",
+    "incorrect_abstention_rate": "false negatives / all held-out answerable labels"
+  },
+  "held_out_metrics": {
+    "sample_count": 12,
+    "confusion_matrix": {
+      "actual_answerable": {
+        "predicted_answerable": 5,
+        "abstained": 1
+      },
+      "actual_unanswerable": {
+        "predicted_answerable": 3,
+        "abstained": 3
+      }
+    },
+    "accuracy": 0.6666666666666666,
+    "answerable_precision": 0.625,
+    "answerable_recall": 0.8333333333333334,
+    "macro_f1": 0.6571428571428571,
+    "false_answer_rate": 0.5,
+    "false_answer_denominator": 6,
+    "correct_abstention_rate": 0.5,
+    "incorrect_abstention_rate": 0.16666666666666666,
+    "per_category": {
+      "direct": {
+        "samples": 1,
+        "correct": 1,
+        "false_answers": 0
+      },
+      "paraphrase": {
+        "samples": 1,
+        "correct": 1,
+        "false_answers": 0
+      },
+      "partial": {
+        "samples": 1,
+        "correct": 1,
+        "false_answers": 0
+      },
+      "unanswerable": {
+        "samples": 1,
+        "correct": 0,
+        "false_answers": 1
+      },
+      "missing_entity": {
+        "samples": 1,
+        "correct": 0,
+        "false_answers": 1
+      },
+      "unsupported_numeric": {
+        "samples": 1,
+        "correct": 0,
+        "false_answers": 1
+      },
+      "multi_passage": {
+        "samples": 1,
+        "correct": 0,
+        "false_answers": 0
+      },
+      "conflicting": {
+        "samples": 1,
+        "correct": 1,
+        "false_answers": 0
+      },
+      "negation": {
+        "samples": 1,
+        "correct": 1,
+        "false_answers": 0
+      },
+      "topical_similarity": {
+        "samples": 1,
+        "correct": 1,
+        "false_answers": 0
+      },
+      "misleading_keyword_overlap": {
+        "samples": 1,
+        "correct": 1,
+        "false_answers": 0
+      },
+      "incomplete_context": {
+        "samples": 1,
+        "correct": 1,
+        "false_answers": 0
+      }
+    }
+  },
+  "always_answer_baseline": {
+    "sample_count": 12,
+    "confusion_matrix": {
+      "actual_answerable": {
+        "predicted_answerable": 6,
+        "abstained": 0
+      },
+      "actual_unanswerable": {
+        "predicted_answerable": 6,
+        "abstained": 0
+      }
+    },
+    "accuracy": 0.5,
+    "answerable_precision": 0.5,
+    "answerable_recall": 1.0,
+    "macro_f1": 0.3333333333333333,
+    "false_answer_rate": 1.0,
+    "false_answer_denominator": 6,
+    "correct_abstention_rate": 0.0,
+    "incorrect_abstention_rate": 0.0,
+    "per_category": {
+      "direct": {
+        "samples": 1,
+        "correct": 1,
+        "false_answers": 0
+      },
+      "paraphrase": {
+        "samples": 1,
+        "correct": 1,
+        "false_answers": 0
+      },
+      "partial": {
+        "samples": 1,
+        "correct": 1,
+        "false_answers": 0
+      },
+      "unanswerable": {
+        "samples": 1,
+        "correct": 0,
+        "false_answers": 1
+      },
+      "missing_entity": {
+        "samples": 1,
+        "correct": 0,
+        "false_answers": 1
+      },
+      "unsupported_numeric": {
+        "samples": 1,
+        "correct": 0,
+        "false_answers": 1
+      },
+      "multi_passage": {
+        "samples": 1,
+        "correct": 1,
+        "false_answers": 0
+      },
+      "conflicting": {
+        "samples": 1,
+        "correct": 1,
+        "false_answers": 0
+      },
+      "negation": {
+        "samples": 1,
+        "correct": 1,
+        "false_answers": 0
+      },
+      "topical_similarity": {
+        "samples": 1,
+        "correct": 0,
+        "false_answers": 1
+      },
+      "misleading_keyword_overlap": {
+        "samples": 1,
+        "correct": 0,
+        "false_answers": 1
+      },
+      "incomplete_context": {
+        "samples": 1,
+        "correct": 0,
+        "false_answers": 1
+      }
+    }
+  },
+  "per_record": [
+    {
+      "question_id": "HOLD-01",
+      "category": "direct",
+      "expected_answerability": "SUFFICIENT",
+      "lexical_overlap_score": 0.26666666666666666,
+      "predicted_answerable": true,
+      "correct": true
+    },
+    {
+      "question_id": "HOLD-02",
+      "category": "paraphrase",
+      "expected_answerability": "SUFFICIENT",
+      "lexical_overlap_score": 0.2222222222222222,
+      "predicted_answerable": true,
+      "correct": true
+    },
+    {
+      "question_id": "HOLD-03",
+      "category": "partial",
+      "expected_answerability": "PARTIAL",
+      "lexical_overlap_score": 0.18181818181818182,
+      "predicted_answerable": true,
+      "correct": true
+    },
+    {
+      "question_id": "HOLD-04",
+      "category": "unanswerable",
+      "expected_answerability": "INSUFFICIENT",
+      "lexical_overlap_score": 0.2222222222222222,
+      "predicted_answerable": true,
+      "correct": false
+    },
+    {
+      "question_id": "HOLD-05",
+      "category": "missing_entity",
+      "expected_answerability": "INSUFFICIENT",
+      "lexical_overlap_score": 0.3,
+      "predicted_answerable": true,
+      "correct": false
+    },
+    {
+      "question_id": "HOLD-06",
+      "category": "unsupported_numeric",
+      "expected_answerability": "INSUFFICIENT",
+      "lexical_overlap_score": 0.2222222222222222,
+      "predicted_answerable": true,
+      "correct": false
+    },
+    {
+      "question_id": "HOLD-07",
+      "category": "multi_passage",
+      "expected_answerability": "SUFFICIENT",
+      "lexical_overlap_score": 0.15384615384615385,
+      "predicted_answerable": false,
+      "correct": false
+    },
+    {
+      "question_id": "HOLD-08",
+      "category": "conflicting",
+      "expected_answerability": "CONFLICTING",
+      "lexical_overlap_score": 0.4,
+      "predicted_answerable": true,
+      "correct": true
+    },
+    {
+      "question_id": "HOLD-09",
+      "category": "negation",
+      "expected_answerability": "SUFFICIENT",
+      "lexical_overlap_score": 0.4,
+      "predicted_answerable": true,
+      "correct": true
+    },
+    {
+      "question_id": "HOLD-10",
+      "category": "topical_similarity",
+      "expected_answerability": "INSUFFICIENT",
+      "lexical_overlap_score": 0.15384615384615385,
+      "predicted_answerable": false,
+      "correct": true
+    },
+    {
+      "question_id": "HOLD-11",
+      "category": "misleading_keyword_overlap",
+      "expected_answerability": "INSUFFICIENT",
+      "lexical_overlap_score": 0.15789473684210525,
+      "predicted_answerable": false,
+      "correct": true
+    },
+    {
+      "question_id": "HOLD-12",
+      "category": "incomplete_context",
+      "expected_answerability": "INSUFFICIENT",
+      "lexical_overlap_score": 0.0,
+      "predicted_answerable": false,
+      "correct": true
+    }
+  ],
+  "limitations": [
+    "Only 12 held-out synthetic examples; labels and passages are not human-reviewed.",
+    "Jaccard token overlap ignores meaning, relation, entity binding, and numerical semantics.",
+    "The threshold is tuned on six development examples and evaluated once on held-out examples.",
+    "No generalization or real-world answerability claim is justified."
+  ]
+}
