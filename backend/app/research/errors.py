@@ -24,6 +24,10 @@ MESSAGES = {
     ),
     "no_evidence": "No usable evidence was collected. No report was generated.",
     "invalid_output": "The model returned invalid structured output or unknown citation IDs.",
+    "exact_quote_invalid": (
+        "The model's supporting quotation could not be matched to the cited source. "
+        "No answer was generated."
+    ),
     "provider_error": "A provider rejected the request. Check server-side configuration.",
     "model_unavailable": (
         "The local Ollama service or configured model is unavailable. "

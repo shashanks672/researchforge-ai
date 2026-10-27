@@ -1,3 +1,5 @@
+import re
+import unicodedata
 from collections.abc import Awaitable, Callable
 from datetime import UTC, datetime
 from typing import TypedDict, cast
@@ -30,11 +32,17 @@ from app.research.schemas import (
 from app.research.sufficiency import (
     EvidenceSufficiencyDecision,
     EvidenceSufficiencyResult,
+    FactAssessment,
     evaluated_result,
     insufficient_result,
 )
 from app.research.verification import verify
-from app.research.verification_schemas import VerificationSnapshot
+from app.research.verification_schemas import (
+    Claim,
+    EvidenceMatch,
+    Verdict,
+    VerificationSnapshot,
+)
 from app.research.web import content_hash, normalize_url, relevant_excerpt
 
 
@@ -55,9 +63,122 @@ class ResearchState(TypedDict):
     followup_searches: int
     sufficiency: list[EvidenceSufficiencyResult]
     followup_added_evidence: bool
+    simple_document_question: bool
 
 
 Checkpoint = Callable[[str, ResearchState], Awaitable[None]]
+
+
+_SIMPLE_DOCUMENT_QUESTION = re.compile(
+    r"^(?:how\s+(?:many|much|long|old)|what|who|when|where|which)\b", re.I
+)
+
+
+def is_simple_document_question(question: str) -> bool:
+    """Route one short factual document question through a bounded evidence path."""
+    value = " ".join(question.split())
+    if len(value) > 240 or value.count("?") > 1 or not _SIMPLE_DOCUMENT_QUESTION.match(value):
+        return False
+    # Conjunctions often signal multiple facts; let the full research workflow handle them.
+    return not re.search(r"\b(?:and|or|also|compare|explain|describe|list)\b", value, re.I)
+
+
+def _exact_source_span(source_text: str, quote: str) -> str | None:
+    """Recover a verbatim source span when only allowed whitespace/NFKC differs."""
+    target = " ".join(unicodedata.normalize("NFKC", quote).split())
+    normalized: list[str] = []
+    offsets: list[tuple[int, int]] = []
+    for index, character in enumerate(source_text):
+        for output in unicodedata.normalize("NFKC", character):
+            if output.isspace():
+                if normalized and normalized[-1] == " ":
+                    offsets[-1] = (offsets[-1][0], index + 1)
+                else:
+                    normalized.append(" ")
+                    offsets.append((index, index + 1))
+            else:
+                normalized.append(output)
+                offsets.append((index, index + 1))
+    left = 0
+    right = len(normalized)
+    while left < right and normalized[left] == " ":
+        left += 1
+    while right > left and normalized[right - 1] == " ":
+        right -= 1
+    haystack = "".join(normalized[left:right])
+    position = haystack.find(target)
+    if not target or position < 0:
+        return None
+    mapped_start = left + position
+    mapped_end = mapped_start + len(target) - 1
+    start, end = offsets[mapped_start][0], offsets[mapped_end][1]
+    span = source_text[start:end]
+    if " ".join(unicodedata.normalize("NFKC", span).split()) != target:
+        return None
+    return span
+
+
+def _extractive_document_report(
+    question: str,
+    sources: list[EvidenceSource],
+    sufficiency: list[EvidenceSufficiencyResult],
+) -> DraftReport:
+    """Create a cited answer only from exact quotations in validated evidence."""
+    supported = [
+        (fact, quote)
+        for result in sufficiency
+        if result.status == "SUFFICIENT"
+        for fact in result.fact_assessments
+        if fact.status == "SUPPORTED"
+        for quote in fact.evidence
+    ]
+    source_by_id = {source.source_id: source for source in sources}
+    grounded: list[GroundedStatement] = []
+    for _, quote in supported:
+        source = source_by_id.get(quote.source_id)
+        exact_quote = _exact_source_span(source.excerpt, quote.quote) if source else None
+        if exact_quote is None or len(exact_quote) > 1140:
+            raise ResearchFailure("exact_quote_invalid")
+        grounded.append(
+            GroundedStatement(
+                text=f"The selected document states: “{exact_quote}”",
+                source_ids=[quote.source_id],
+            )
+        )
+    if not grounded or any(result.status != "SUFFICIENT" for result in sufficiency):
+        abstention = GroundedStatement(
+            text=(
+                "Insufficient evidence was found in the selected document passages "
+                "to answer reliably."
+            ),
+            source_ids=[],
+        )
+        return DraftReport(
+            title="Research findings: evidence insufficient",
+            executive_summary=[abstention],
+            objective=question,
+            findings=[abstention],
+            comparisons=[],
+            limitations=[
+                "No answer is provided because the evidence assessment was not fully sufficient."
+            ],
+            conclusion=abstention,
+        )
+    # One supported fact normally produces one statement. Keep the model output bounded if a
+    # provider unexpectedly returns repeated facts or quotes.
+    grounded = grounded[:8]
+    return DraftReport(
+        title="Document answer",
+        executive_summary=grounded[:3],
+        objective=question,
+        findings=grounded,
+        comparisons=[],
+        limitations=[
+            "The response reproduces exact source wording; evidence support is not "
+            "independent truth verification."
+        ],
+        conclusion=grounded[0],
+    )
 
 
 async def run_workflow(
@@ -77,6 +198,28 @@ async def run_workflow(
 
     async def plan_node(state: ResearchState) -> dict[str, object]:
         await checkpoint("planning", state)
+        if state["simple_document_question"]:
+            question = state["question"]
+            subquestion = question if len(question.strip()) >= 10 else f"Answer: {question}"
+            plan = ResearchPlan(
+                objective=(
+                    f"Answer the user's single factual question from selected document "
+                    f"evidence: {question}"
+                )[:800],
+                scope=(
+                    "Use only retrieved passages from the selected documents; abstain if "
+                    "they do not directly answer the question."
+                ),
+                subquestions=[
+                    Subquestion(
+                        question=subquestion,
+                        search_query=question[:200] or "document evidence",
+                    )
+                ],
+            )
+            state["plan"] = plan
+            await checkpoint("planned", state)
+            return {"plan": plan}
         planning_question = (
             state["question"]
             if mode == "web"
@@ -99,7 +242,10 @@ async def run_workflow(
             passages = await documents.retrieve(
                 state["question"],
                 document_ids or [],
-                min(settings.retrieval_k, settings.max_sources),
+                min(
+                    2 if state["simple_document_question"] else settings.retrieval_k,
+                    settings.max_sources,
+                ),
             )
             if mode == "combined":
                 # Request a broad candidate set, then use the strongest lexical match
@@ -233,10 +379,41 @@ async def run_workflow(
             await checkpoint("insufficient_evidence", state)
             raise ResearchFailure("no_evidence")
         now = datetime.now(UTC)
-        results = [
-            insufficient_result(f"Q{index}", item.question, [])
-            for index, item in enumerate(plan.subquestions, 1)
-        ]
+        if state["simple_document_question"]:
+            results = [
+                evaluated_result(
+                    EvidenceSufficiencyDecision(
+                        question_id=f"Q{index}",
+                        status="INSUFFICIENT",
+                        supporting_evidence_ids=[],
+                        missing_information=["A relevant document passage was not retrieved."],
+                        explanation=(
+                            "No matching document passage was retrieved; no answer is provided."
+                        ),
+                        fact_assessments=[
+                            FactAssessment(
+                                fact=item.question[:300],
+                                entity="",
+                                property="",
+                                value="",
+                                unit="",
+                                time_period="",
+                                scope="",
+                                negation="",
+                                status="MISSING",
+                                evidence=[],
+                            )
+                        ],
+                    ),
+                    item.question,
+                )
+                for index, item in enumerate(plan.subquestions, 1)
+            ]
+        else:
+            results = [
+                insufficient_result(f"Q{index}", item.question, [])
+                for index, item in enumerate(plan.subquestions, 1)
+            ]
         safe_text = "Insufficient evidence was found in the selected sources to answer reliably."
         abstention = GroundedStatement(text=safe_text, source_ids=[])
         report = DraftReport(
@@ -358,7 +535,11 @@ async def run_workflow(
         plan = state["plan"]
         assert plan is not None
         await checkpoint("writing", state)
-        if state["sufficiency"] and all(
+        if state["simple_document_question"]:
+            report = _extractive_document_report(
+                state["question"], state["sources"], state["sufficiency"]
+            )
+        elif state["sufficiency"] and all(
             item.status == "INSUFFICIENT" for item in state["sufficiency"]
         ):
             safe_text = (
@@ -415,7 +596,86 @@ async def run_workflow(
         assert report is not None
         await checkpoint("verifying_claims", state)
         try:
-            if (
+            if state["simple_document_question"]:
+                now = datetime.now(UTC)
+                claims: list[Claim] = []
+                verdicts: list[Verdict] = []
+                for result in state["sufficiency"]:
+                    if result.status != "SUFFICIENT":
+                        continue
+                    for fact in result.fact_assessments:
+                        if fact.status != "SUPPORTED":
+                            continue
+                        for quote in fact.evidence:
+                            if len(claims) >= 8:
+                                break
+                            source = next(
+                                (
+                                    item
+                                    for item in state["sources"]
+                                    if item.source_id == quote.source_id
+                                ),
+                                None,
+                            )
+                            exact_quote = (
+                                _exact_source_span(source.excerpt, quote.quote) if source else None
+                            )
+                            if source is None or exact_quote is None:
+                                raise ResearchFailure("exact_quote_invalid")
+                            claim_id = f"C{len(claims) + 1}"
+                            claim_text = f"The selected document states: “{exact_quote}”"
+                            claims.append(
+                                Claim(
+                                    text=claim_text,
+                                    location=f"findings:{len(claims)}",
+                                    source_ids=[source.source_id],
+                                    checkable=True,
+                                    important=True,
+                                    claim_id=claim_id,
+                                    eligibility="VERIFIABLE_CLAIM",
+                                    eligibility_reason=(
+                                        "The answer reproduces a validated source quotation."
+                                    ),
+                                )
+                            )
+                            verdicts.append(
+                                Verdict(
+                                    claim_id=claim_id,
+                                    status="SUPPORTED",
+                                    matches=[
+                                        EvidenceMatch(
+                                            source_id=source.source_id,
+                                            quote=exact_quote,
+                                            role="support",
+                                        )
+                                    ],
+                                    explanation=(
+                                        "The quotation exactly matches the cited document passage. "
+                                        "This checks source support, not independent factual truth."
+                                    ),
+                                    method="local-extractive-source-quote-v1",
+                                    evaluated_at=now,
+                                )
+                            )
+                result = VerificationSnapshot(
+                    id=uuid4(),
+                    session_id=session_id,
+                    status="completed",
+                    execution_mode=settings.execution_mode,
+                    method="local-extractive-source-quote-v1",
+                    iteration=state["iteration"],
+                    claims=claims,
+                    verdicts=verdicts,
+                    contradictions=[],
+                    candidates={claim.claim_id: claim.source_ids for claim in claims},
+                    activities=[
+                        "Claim generation reused validated exact source quotations. No "
+                        "separate claim-extraction or truth-verification call was made."
+                    ],
+                    evidence_sufficiency=list(state["sufficiency"]),
+                    evaluated_at=now,
+                )
+            elif (
                 mode == "documents"
                 and settings.execution_mode == "local"
                 and state["sufficiency"]
@@ -692,6 +952,11 @@ async def run_workflow(
         "followup_searches": 0,
         "sufficiency": [],
         "followup_added_evidence": False,
+        "simple_document_question": (
+            mode == "documents"
+            and settings.execution_mode == "local"
+            and is_simple_document_question(question)
+        ),
     }
     # Never inherit ambient LangSmith tracing or send research data to telemetry.
     with tracing_context(enabled=False):

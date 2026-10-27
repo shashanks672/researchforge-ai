@@ -20,11 +20,125 @@ from app.research.providers import (
 )
 from app.research.schemas import DraftReport, EvidenceSource, ResearchPlan
 from app.research.sufficiency import EvidenceQuote, EvidenceSufficiencyDecision, FactAssessment
+from app.research.verification_schemas import Assessment, Claim, Extraction
 from app.research.workflow import ResearchState, run_workflow
 
 
 def mock_settings(**values: object) -> Settings:
     return Settings.model_validate({"llm_provider": "mock", "search_provider": "mock", **values})
+
+
+class DocumentFixture:
+    def __init__(self, text: str) -> None:
+        self.text = text
+        self.requested_k: int | None = None
+
+    async def retrieve(self, question: str, document_ids: list[object], k: int) -> list[Passage]:
+        self.requested_k = k
+        return [
+            Passage(
+                chunk_id=uuid4(),
+                document_id=document_ids[0],
+                filename="synthetic-pilot.pdf",
+                page=1,
+                heading="Pilot results",
+                text=self.text,
+                checksum="e" * 64,
+                score=0.9,
+            )
+        ]
+
+
+class SufficiencyFixtureLLM(MockLLM):
+    def __init__(
+        self,
+        supported: bool = True,
+        invalid_quote: bool = False,
+        quote_override: str | None = None,
+    ) -> None:
+        self.supported = supported
+        self.invalid_quote = invalid_quote
+        self.quote_override = quote_override
+        self.calls = 0
+        self.plan_calls = 0
+        self.writer_calls = 0
+        self.verification_calls = 0
+
+    async def plan(self, question: str) -> LLMResult[ResearchPlan]:
+        self.plan_calls += 1
+        return await super().plan(question)
+
+    async def assess_sufficiency(
+        self, question_id: str, question: str, sources: list[EvidenceSource]
+    ) -> LLMResult[EvidenceSufficiencyDecision]:
+        self.calls += 1
+        if self.supported:
+            evidence = [
+                EvidenceQuote(
+                    source_id=sources[0].source_id,
+                    quote=(
+                        "invented quotation"
+                        if self.invalid_quote
+                        else self.quote_override or sources[0].excerpt
+                    ),
+                )
+            ]
+            fact = FactAssessment(
+                fact="Number of irrigation zones",
+                entity="synthetic pilot",
+                property="irrigation zones",
+                value="4",
+                unit="zones",
+                time_period="pilot",
+                scope="synthetic pilot",
+                negation="",
+                status="SUPPORTED",
+                evidence=evidence,
+            )
+            decision = EvidenceSufficiencyDecision(
+                question_id=question_id,
+                status="SUFFICIENT",
+                supporting_evidence_ids=[sources[0].source_id],
+                missing_information=[],
+                explanation="The passage directly states the requested quantity.",
+                fact_assessments=[fact],
+            )
+        else:
+            fact = FactAssessment(
+                fact="Requested value",
+                entity="unmentioned topic",
+                property="value",
+                value="",
+                unit="",
+                time_period="",
+                scope="",
+                negation="",
+                status="MISSING",
+                evidence=[],
+            )
+            decision = EvidenceSufficiencyDecision(
+                question_id=question_id,
+                status="INSUFFICIENT",
+                supporting_evidence_ids=[],
+                missing_information=[fact.fact],
+                explanation="The retrieved passage does not contain the requested information.",
+                fact_assessments=[fact],
+            )
+        return LLMResult(decision)
+
+    async def write_grounded(self, *args: object, **kwargs: object) -> LLMResult[DraftReport]:
+        self.writer_calls += 1
+        return await super().write_grounded(*args, **kwargs)  # type: ignore[arg-type]
+
+    async def extract_claims(self, report: DraftReport) -> LLMResult[Extraction]:
+        self.verification_calls += 1
+        return await super().extract_claims(report)
+
+    async def assess_claims(
+        self, claims: list[Claim], sources: list[EvidenceSource]
+    ) -> LLMResult[Assessment]:
+        self.verification_calls += 1
+        return await super().assess_claims(claims, sources)
 
 
 def test_graph_plan_collection_citations_and_deduplication() -> None:
@@ -53,6 +167,162 @@ def test_graph_plan_collection_citations_and_deduplication() -> None:
         assert budget.usage.estimated_cost_usd == 0
         assert "Insufficient evidence" in result["markdown"]
         assert all(item.status == "INSUFFICIENT" for item in result["sufficiency"])
+
+    asyncio.run(exercise())
+
+
+def test_simple_document_question_uses_one_sufficiency_call_and_exact_page_citation() -> None:
+    async def exercise() -> None:
+        settings = Settings.model_validate(
+            {
+                "llm_provider": "ollama",
+                "search_provider": "disabled",
+                "provider_retries": 0,
+            }
+        )
+        text = "The synthetic pilot divided the plot into four irrigation zones."
+        docs = DocumentFixture(text)
+        llm = SufficiencyFixtureLLM()
+        budget = RunBudget(settings)
+
+        async def save(stage: str, state: ResearchState) -> None:
+            pass
+
+        document_id = uuid4()
+        result = await run_workflow(
+            uuid4(),
+            "How many irrigation zones were used in the synthetic pilot?",
+            settings,
+            llm,
+            DisabledSearch(),
+            budget,
+            save,
+            mode="documents",
+            documents=docs,  # type: ignore[arg-type]
+            document_ids=[document_id],
+        )
+        assert docs.requested_k == 2
+        assert llm.plan_calls == 0
+        assert llm.calls == budget.usage.llm_calls == 1
+        assert llm.writer_calls == llm.verification_calls == 0
+        assert result["verification"] is not None
+        assert result["verification"].method == "local-extractive-source-quote-v1"
+        assert result["verification"].verdicts[0].status == "SUPPORTED"
+        assert result["report"].findings[0].text.endswith(f"“{text}”")
+        assert "[S1]" in (result["markdown"] or "")
+        assert "page 1" in (result["markdown"] or "")
+        assert result["sources"][0].page == 1
+        assert result["report"] is not None
+        assert result["report"].findings[0].source_ids == ["S1"]
+
+    asyncio.run(exercise())
+
+
+def test_simple_document_question_abstains_when_fact_is_missing() -> None:
+    async def exercise() -> None:
+        settings = Settings.model_validate(
+            {"llm_provider": "ollama", "search_provider": "disabled", "provider_retries": 0}
+        )
+        llm = SufficiencyFixtureLLM(supported=False)
+        result = await run_workflow(
+            uuid4(),
+            "What was the project budget?",
+            settings,
+            llm,
+            DisabledSearch(),
+            RunBudget(settings),
+            lambda stage, state: asyncio.sleep(0),
+            mode="documents",
+            documents=DocumentFixture("The pilot used four irrigation zones."),  # type: ignore[arg-type]
+            document_ids=[uuid4()],
+        )
+        assert result["sufficiency"][0].status == "INSUFFICIENT"
+        assert result["report"] is not None
+        assert not result["report"].findings[0].source_ids
+        assert "Insufficient evidence" in (result["markdown"] or "")
+        assert result["verification"] is not None
+        assert result["verification"].verdicts == []
+        assert llm.writer_calls == llm.verification_calls == 0
+
+    asyncio.run(exercise())
+
+
+def test_simple_document_question_rejects_quote_not_in_source() -> None:
+    async def exercise() -> None:
+        settings = Settings.model_validate(
+            {"llm_provider": "ollama", "search_provider": "disabled", "provider_retries": 0}
+        )
+        with pytest.raises(ResearchFailure, match="invalid_output"):
+            await run_workflow(
+                uuid4(),
+                "How many irrigation zones were used in the synthetic pilot?",
+                settings,
+                SufficiencyFixtureLLM(invalid_quote=True),
+                DisabledSearch(),
+                RunBudget(settings),
+                lambda stage, state: asyncio.sleep(0),
+                mode="documents",
+                documents=DocumentFixture(
+                    "The synthetic pilot divided the plot into four irrigation zones."
+                ),  # type: ignore[arg-type]
+                document_ids=[uuid4()],
+            )
+
+    asyncio.run(exercise())
+
+
+def test_simple_document_question_restores_whitespace_normalized_quote_verbatim() -> None:
+    async def exercise() -> None:
+        settings = Settings.model_validate(
+            {"llm_provider": "ollama", "search_provider": "disabled", "provider_retries": 0}
+        )
+        exact_source = "The synthetic pilot divided the plot into four\nirrigation zones."
+        llm_quote = "The synthetic pilot divided the plot into four irrigation zones."
+        result = await run_workflow(
+            uuid4(),
+            "How many irrigation zones were used in the synthetic pilot?",
+            settings,
+            SufficiencyFixtureLLM(quote_override=llm_quote),
+            DisabledSearch(),
+            RunBudget(settings),
+            lambda stage, state: asyncio.sleep(0),
+            mode="documents",
+            documents=DocumentFixture(exact_source),  # type: ignore[arg-type]
+            document_ids=[uuid4()],
+        )
+        assert result["report"].findings[0].text.endswith(f"“{exact_source}”")
+        assert result["verification"].verdicts[0].matches[0].quote == exact_source
+
+    asyncio.run(exercise())
+
+
+def test_simple_document_question_reports_model_timeout_without_retry() -> None:
+    class TimeoutLLM(SufficiencyFixtureLLM):
+        async def assess_sufficiency(
+            self, question_id: str, question: str, sources: list[EvidenceSource]
+        ) -> LLMResult[EvidenceSufficiencyDecision]:
+            self.calls += 1
+            raise TimeoutError
+
+    async def exercise() -> None:
+        settings = Settings.model_validate(
+            {"llm_provider": "ollama", "search_provider": "disabled", "provider_retries": 0}
+        )
+        with pytest.raises(ResearchFailure, match="provider_timeout"):
+            await run_workflow(
+                uuid4(),
+                "How many irrigation zones were used in the synthetic pilot?",
+                settings,
+                TimeoutLLM(),
+                DisabledSearch(),
+                RunBudget(settings),
+                lambda stage, state: asyncio.sleep(0),
+                mode="documents",
+                documents=DocumentFixture(
+                    "The synthetic pilot divided the plot into four irrigation zones."
+                ),  # type: ignore[arg-type]
+                document_ids=[uuid4()],
+            )
 
     asyncio.run(exercise())
 
@@ -292,11 +562,12 @@ def test_local_document_abstention_skips_claim_models() -> None:
         async def save(stage: str, state: ResearchState) -> None:
             pass
 
+        llm = MockLLM()
         result = await run_workflow(
             uuid4(),
             "What is the device's annual service cost?",
             settings,
-            MockLLM(),
+            llm,
             MockSearch(),
             budget,
             save,
@@ -308,10 +579,11 @@ def test_local_document_abstention_skips_claim_models() -> None:
         assert verification is not None and verification.claims == []
         assert verification.verdicts == [] and verification.contradictions == []
         assert verification.activities == [
-            "Claim extraction and verification skipped because no factual answer was generated."
+            "Claim generation reused validated exact source quotations. No separate "
+            "claim-extraction or truth-verification call was made."
         ]
         assert "Insufficient evidence" in (result["markdown"] or "")
-        assert budget.usage.llm_calls == 3  # planning and two sufficiency questions only
+        assert budget.usage.llm_calls == 1  # bounded factual path; no plan or writer calls
 
     asyncio.run(exercise())
 
